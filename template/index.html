@@ -1,0 +1,266 @@
+{% extends 'body.html' %}
+{% load static %}
+
+{% block contents %}
+
+
+<header>
+    <div class="header-area">
+        <div id="sticky-header" class="main-header-area">
+            <div class="container">
+                <div class="header_bottom_border">
+                    <div class="row align-items-center">
+                        <div class="col-xl-3 col-lg-3">
+                            <div class="logo">
+                                <a href="{% url 'home' %}">
+                                    <img class="logo" src="{% static 'img/mine.png' %}" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="main-menu d-none d-lg-block">
+                                <nav>
+                                    <ul id="navigation">
+                                        <li><a href="{% url 'home' %}">Home</a></li>
+                                        <li><a href="performer.html">Performer</a></li>
+                                        <li><a href="#">Pages <i class="ti-angle-down"></i></a>
+                                            <ul class="submenu">
+                                                <li><a href="about.html">About</a></li>
+                                                <li><a href="Program.html">Program</a></li>
+                                                <li><a href="Venue.html">Venue</a></li>
+                                                <li><a href="elements.html">Elements</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Blog <i class="ti-angle-down"></i></a>
+                                            <ul class="submenu">
+                                                <li><a href="blog.html">Blog</a></li>
+                                                <li><a href="single-blog.html">Single Blog</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="contact.html">Contact</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <!-- Student Profile Section -->
+                        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+                            <div class="buy_tkt">
+                                <div class="book_btn d-flex align-items-center">
+                                    {% if request.user.is_authenticated %}
+                                    <div class="dropdown">
+                                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                            id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                            style="display: flex; align-items: center; background: none; border: none; color: white;">
+
+                                            <!-- Profile Picture -->
+                                            {% if user.userprofile.profile_picture %}
+                                            <img src="{{ user.userprofile.profile_picture.url }}" alt="Profile Picture"
+                                                width="50" height="50"
+                                                style="border-radius: 50%; margin-right: 10px; border: 2px solid white;">
+                                            {% else %}
+                                            <img src="{% static 'default.jpg' %}" alt="Default Profile" width="40"
+                                                height="40"
+                                                style="border-radius: 50%; margin-right: 10px; border: 2px solid white;">
+                                            {% endif %}
+
+                                            <div
+                                                style="display: flex; flex-direction: column; align-items: flex-start;">
+                                                <span style="color: white; font-size: 18px; font-weight: bold;">
+                                                    {{ user.username }} <!-- Show the logged-in user's name -->
+                                                </span>
+                                                <span style="color: #ddd; font-size: 14px;"> <!-- Display role -->
+                                                    ({{ user.userprofile.role|capfirst }})
+                                                </span>
+                                            </div>
+                                        </a>
+
+                                        <ul style="background: none !important;" class="dropdown-menu dropdown-menu-end"
+                                            aria-labelledby="profileDropdown">
+                                            {% if user.userprofile.role == 'admin' %}
+                                            <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin
+                                                    Dashboard</a></li>
+                                            {% elif user.userprofile.role == 'student' %}
+                                            <li><a class="dropdown-item" href="{% url 'student_dashboard' %}">Student
+                                                    Dashboard</a></li>
+                                            {% elif user.userprofile.role == 'teacher' %}
+                                            <li><a class="dropdown-item" href="{% url 'teacher_dashboard' %}">Teacher
+                                                    Dashboard</a></li>
+                                            {% elif user.userprofile.role == 'event_head' %}
+                                            <li><a class="dropdown-item" href="{% url 'event_head_dashboard' %}">Event
+                                                    Head Dashboard</a></li>
+                                            {% elif user.userprofile.role == 'outsider' %}
+                                            <li><a class="dropdown-item" href="{% url 'outsider_dashboard' %}">Outsider
+                                                    Dashboard</a></li>
+                                            {% endif %}
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item" href="">Profile</a></li>
+                                            <li><a  class="dropdown-item "
+                                                    href="{% url 'logout' %}">Logout</a></li>
+                                        </ul>
+                                    </div>
+                                    {% else %}
+                                    <a data-bs-toggle="modal" data-bs-target="#roleModal"
+                                        class="btn btn-primary">Who?</a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-12">
+                            <div class="mobile_menu d-block d-lg-none"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="modal fade " id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg popupcontainer">
+        <div class="modal-content popupcontainer">
+            <div class=" popupcontainertop">
+
+                <button style="color: #fff;" type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Role Selection Screen -->
+                <div id="roleSelection">
+                    <h5 style="color: #fff;" class="text-center mb-3">Select Your Role</h5>
+                    <div class="row text-center">
+                        <!-- Admin Card -->
+
+
+                        <div class="col-md-4 mb-3 ">
+                            <div class=" card role-card " onclick="window.location.href='{% url 'admin' %}'">
+                                <div class="card-body">
+                                    <i class="fa fa-user-shield fa-3x"></i>
+                                    <h5 class="mt-2">Admin</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Student Card -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card role-card" onclick="window.location.href='{% url 'student' %}'">
+                                <div class="card-body">
+                                    <i class="fa fa-user-graduate fa-3x"></i>
+                                    <h5 class="mt-2">Student</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Event Head Card -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card role-card" onclick="window.location.href='{% url 'event_head' %}'">
+                                <div class="card-body">
+                                    <i class="fa fa-calendar-check fa-3x"></i>
+                                    <h5 class="mt-2">Event Head</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Outsider Card -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card role-card" onclick="window.location.href='{% url 'others' %}'">
+                                <div class="card-body">
+                                    <i class="fa fa-user-friends fa-3x"></i>
+                                    <h5 class="mt-2">Outsider</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Teacher Card -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card role-card" onclick="window.location.href='{% url 'teacher' %}'">
+                                <div class="card-body">
+                                    <i class="fa fa-chalkboard-teacher fa-3x"></i>
+                                    <h5 class="mt-2">Teacher</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Form (Initially Hidden) -->
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block content %}
+
+{% endblock content %}
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!-- About Section -->
+            <div class="col-lg-3 col-md-6">
+                <h5>College Event Management</h5>
+                <p>Your one-stop platform to explore, register, and participate in exciting college events!</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-3">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">My Bookings</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-lg-3 col-md-3">
+                <h5>Contact</h5>
+                <p>📍 College Name, City</p>
+                <p>📧 support@collegeevents.com</p>
+                <p>📞 +91 XXXXXXXXXX</p>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-4 col-md-12">
+                <h5>Contact Us</h5>
+                <form action="#" method="POST">
+                    <div class="mb-2">
+                        <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-2">
+                        <textarea class="form-control" name="message" rows="3" placeholder="Your Message"
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-custom w-100">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Social Media -->
+        <div class="text-center mt-4">
+            <h5>Follow Us</h5>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-3">
+            <p class="mb-0">&copy; 2025 College Event Management System. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+{% endblock contents %}
