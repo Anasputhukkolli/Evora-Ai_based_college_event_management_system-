@@ -179,17 +179,13 @@
                                 <div class="slider">
                                     <div class="film-grain"></div>
                                     <div class="slides">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 1">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 2">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 3">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 4">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 5">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 6">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 7">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 8">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 9">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 10">
+                                        {% for photo in sports %}
+                                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                                        {% empty %}
+                                        <p>No images available.</p>
+                                        {% endfor %}
                                     </div>
+
                                 </div>
                             </div>
                             <!-- <h4 class=" eventhead wow fadeInUp" data-wow-duration="1s" data-wow-delay=".6s">Mecaf</h4> -->
@@ -208,16 +204,11 @@
                                 <div class="slider">
                                     <div class="film-grain"></div>
                                     <div class="slides">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 1">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 2">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 3">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 4">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 5">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 6">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 7">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 8">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 9">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 10">
+                                        {% for photo in arts %}
+                                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                                        {% empty %}
+                                        <p>No images available.</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -238,16 +229,11 @@
                                 <div class="slider">
                                     <div class="film-grain"></div>
                                     <div class="slides">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 1">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 2">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 3">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 4">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 5">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 6">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 7">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 8">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 9">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 10">
+                                        {% for photo in tech %}
+                                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                                        {% empty %}
+                                        <p>No images available.</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -267,16 +253,11 @@
                                 <div class="slider">
                                     <div class="film-grain"></div>
                                     <div class="slides">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 1">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 2">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 3">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 4">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 5">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 6">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 7">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 8">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 9">
-                                        <img src="{% static './img/images (1).jpg' %}" alt="Slide 10">
+                                        {% for photo in cultural %}
+                                        <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                                        {% empty %}
+                                        <p>No images available.</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -313,16 +294,12 @@
         <div class="row">
             <div class="logo_slider">
                 <div class="slides">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 1">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 2">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 3">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 4">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 5">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 6">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 7">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 8">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 9">
-                    <img src="{% static './img/mine.png' %}" alt="Slide 10">
+                    {% for photo in sponsors %}
+
+                    <img src="{{photo.image.url}}" alt="Slide 1">
+                    {% empty %}
+                    <p>No images available.</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>

@@ -2,9 +2,1471 @@
 {% block content %}
 {% load static %}
 
-<div style="margin:0 auto; width: 900px; margin-top:200px; margin-bottom:200px;" class="container">
-    <h2>Welcome to the student Dashboard!</h2>
-<a href="{% url 'logout' %}">Logout</a>
+<div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav class="nav flex-column">
+            <a href="#" class="nav-link active" data-bs-toggle="tab" data-tab="dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+
+            <!-- Events -->
+            <div class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#eventDropdown">
+                    <span><i class="fas fa-calendar"></i> Events</span> <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="collapse ps-3" id="eventDropdown">
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="explore-event"><i
+                            class="fas fa-search"></i> Explore
+                        Events</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="book-event"><i
+                            class="fas fa-bookmark"></i>Book Events</a>
+                </div>
+            </div>
+
+            <!-- Users -->
+            <!-- <div class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#usersDropdown" aria-expanded="false" aria-controls="usersDropdown">
+                    <span><i class="fas fa-users"></i> Users</span>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="collapse ps-3" id="usersDropdown">
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="admin">admins</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="teacher">Teachers</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="student">Students</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="outsider">outsiders</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="eventhead">Event Head</a>
+
+
+                     User Types Sub-dropdown 
+
+                </div>
+            </div> -->
+
+
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="clubs">
+                <i class="fas fa-users"></i> Clubs & Societies
+            </a>
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="payments">
+                <i class="fas fa-credit-card"></i> Payments
+            </a>
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="reports">
+                <i class="fas fa-chart-line"></i> Reports
+            </a>
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="notifications">
+                <i class="fas fa-bell"></i> Notifications
+            </a>
+
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="chatbot">
+                <i class="fas fa-cog"></i> chat bot
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main class="content">
+        <section style="
+        max-height: 100vh; 
+        overflow-y: auto; 
+        scrollbar-width: thin; 
+        scrollbar-color: #888 #222;
+    " id="dashboard" class="tab-content active">
+            <div class="container py-4">
+                <!-- Welcome Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card welcome-section">
+                            <div class="card-body p-4 text-white">
+                                <div class="row align-items-center">
+                                    {% if request.user.is_authenticated %}
+                                    <div class="col-md-7">
+                                        <h2 class="fw-bold mb-3">Welcome back,<b style="color: rgb(212, 20, 20);">
+                                                {{user.username }}</b></h2>
+                                        <p class="mb-4">You have 3 upcoming events this week. The next event is the Tech
+                                            Workshop on March 15th.</p>
+                                        <a href="#" class="btn btn-light px-4">Explore Events</a>
+                                    </div>
+                                    <div class="col-md-5 text-center d-none d-md-block">
+                                        <img style="width: 38%;  border-radius:50%;"
+                                            src="{{ user.userprofile.profile_picture.url }}" alt="Events Illustration"
+                                            class="img-fluid">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="row mb-4">
+                    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                        <div class="card stat-card">
+                            <i class="fas fa-ticket-alt"></i>
+                            <h2>{{ events_attended }}</h2>
+                            <p class="text-muted mb-0">Events Attended</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 mb-3 mb-lg-0">
+                        <div class="card stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <h2>{{ upcoming_events }}</h2>
+                            <p class="text-muted mb-0">Upcoming Events</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 mb-3 mb-sm-0">
+                        <div class="card stat-card">
+                            <i class="fas fa-users"></i>
+                            <h2>{{ club_memberships }}</h2>
+                            <p class="text-muted mb-0">Club Memberships</p>
+                        </div>
+                    </div>
+                    <!-- <div class="col-sm-6 col-lg-3">
+                        <div class="card stat-card">
+                            <i class="fas fa-certificate"></i>
+                            <h2>24</h2>
+                            <p class="text-muted mb-0">Participation Points</p>
+                        </div>
+                    </div> -->
+                </div>
+
+                <!-- Recent Activity / Announcements -->
+                <div class="row mb-4">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <h5 class="section-title">Recent Activity</h5>
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    {% for Recent in bookedevent %}
+
+                                    <div class="list-group-item p-3">
+
+                                        <div class="d-flex">
+
+
+
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-primary rounded-circle p-2 text-white">
+                                                    <i class="fas fa-ticket-alt"></i>
+                                                </div>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="mb-1">Registered for {{Recent.event}}</h6>
+                                                <p class="text-muted mb-0 small">You registered for the {{Recent.event}}
+                                                </p>
+                                                <small class="text-muted">{{Recent.booking_date}}</small>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5 class="section-title">Announcements</h5>
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush">
+                                    <div class="list-group-item p-3">
+                                        <span class="badge bg-danger float-end">Important</span>
+                                        <h6 class="mb-1">Spring Career Fair Registration Open</h6>
+                                        <p class="text-muted mb-1 small">Register now for the Spring Career Fair.
+                                            Limited spots available!</p>
+                                        <small class="text-muted">Posted on March 10</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white text-center border-top-0">
+                                <a href="#" class="text-primary">View All Announcements</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+
+            </div>
+
+
+
+
+        </section>
+        <section style="
+        max-height: 100vh; 
+        overflow-y: auto; 
+        padding: 10px;
+        scrollbar-width: thin; 
+        scrollbar-color: #888 #222;
+    " id="explore-event" class="tab-content">
+            <div class="container">
+                <!-- Explore Events Main Section -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h2 style="color: aliceblue;" class="section-title">Explore Events</h2>
+                    </div>
+
+                </div>
+
+                <!-- Featured Events Carousel -->
+                <!-- <div class="mb-5">
+                    <h3 class="h5 fw-bold mb-3">Featured This Week</h3>
+                    <div id="featuredEventsCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <span class="badge bg-trending category-badge">Trending</span>
+                                            <img src="/api/placeholder/400/250" class="card-img" alt="Tech Conference">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">Annual Tech Conference 2025</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    15, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Innovation Center
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <span class="badge bg-new category-badge">New</span>
+                                            <img src="/api/placeholder/400/250" class="card-img" alt="Music Festival">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">Spring Music Festival</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    20, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Campus
+                                                    Amphitheater</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <span class="badge bg-trending category-badge">Trending</span>
+                                            <img src="/api/placeholder/400/250" class="card-img" alt="Career Fair">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">Spring Career Fair 2025</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    18, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Student Union</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <span class="badge bg-new category-badge">New</span>
+                                            <img src="/api/placeholder/400/250" class="card-img" alt="AI Workshop">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">AI Workshop Series</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    25, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Computer Science
+                                                    Building</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <img src="/api/placeholder/400/250" class="card-img" alt="Art Exhibition">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">Student Art Exhibition</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    22, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Art Gallery</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card featured-card">
+                                            <img src="/api/placeholder/400/250" class="card-img"
+                                                alt="Debate Championship">
+                                            <div class="card-img-overlay text-white">
+                                                <h5 class="card-title">Debate Championship Finals</h5>
+                                                <p class="card-text mb-1"><i class="bi bi-calendar-event me-2"></i>Mar
+                                                    19, 2025</p>
+                                                <p class="card-text"><i class="bi bi-geo-alt me-2"></i>Main Auditorium
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#featuredEventsCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#featuredEventsCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div> -->
+
+                <!-- Filters -->
+                <div class="filter-container">
+                    <div class="row g-3">
+                        <!-- <div class="col-md-3">
+                            <select class="form-select" id="categoryFilter">
+                                <option value="all" selected>All Categories</option>
+                                <option value="academic">Academic</option>
+                                <option value="arts">Arts & Culture</option>
+                                <option value="career">Career</option>
+                                <option value="sports">Sports</option>
+                                <option value="social">Social</option>
+                                <option value="tech">Technology</option>
+                            </select>
+                        </div> -->
+                        <!-- <div class="col-md-3">
+                            <select class="form-select" id="dateFilter">
+                                <option value="all" selected>All Dates</option>
+                                <option value="today">Today</option>
+                                <option value="tomorrow">Tomorrow</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div> -->
+                        <!-- <div class="col-md-3">
+                            <select class="form-select" id="locationFilter">
+                                <option value="all" selected>All Locations</option>
+                                <option value="student-union">Student Union</option>
+                                <option value="library">Library</option>
+                                <option value="sports-complex">Sports Complex</option>
+                                <option value="auditorium">Auditorium</option>
+                                <option value="arts-center">Arts Center</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" id="searchEvents"
+                                    placeholder="Search events...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event List -->
+                <div class="row g-4" id="eventsContainer">
+
+                    {% for event in events %}
+
+
+
+                    <!-- Event Card 1 -->
+                    <div class="col-md-4" data-category="{{ event.category }}">
+                        <div class="card event-card shadow-sm">
+                            <img src="{{ event.poster.url }}" class="card-img-top event-image" alt="{{ event.name }}">
+                            <div class="card-body">
+                                <p style="color: #fff;" class="event-category">{{ event.category }}</p>
+                                <h5 class="event-title">{{ event.name }}</h5>
+                                <span style="color: #fff !important; display:block;">price:{{ event.price }}</span>
+
+                                <div class="date-badge">
+                                    <i class="bi bi-calendar-event"></i> {{ event.date }}, {{ event.time }}
+                                </div>
+                                <div class="location-badge">
+                                    <i class="bi bi-geo-alt"></i> {{ event.venue }}
+                                </div>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button class="btn btn-primary book-btn" data-name="{{ event.name }}"
+                                        data-date="{{ event.date }}" data-time="{{ event.time }}"
+                                        data-venue="{{ event.venue }}" data-category="{{ event.category }}"
+                                        data-price="{{ event.price }}" data-eventid="{{ event.id }}">
+                                        Book
+                                    </button>
+
+
+                                    <button class="btn btn-outline-primary save-event" data-event-id="{{ event.id }}">
+                                        <i style="color: #fff !important;" class="bi bi-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    <!-- Event Card 2 -->
+                    <script>document.addEventListener("DOMContentLoaded", function () {
+                            document.querySelectorAll(".book-btn").forEach(function (button) {
+                                button.addEventListener("click", function () {
+                                    let eventId = this.getAttribute("data-eventid").trim(); // Get event ID
+
+                                    if (eventId) {
+                                        alert("Please go to the booking section to complete your booking."); // Show alert
+                                    } else {
+                                        alert("Error: Event ID is missing!");
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.querySelectorAll(".book-btn").forEach(button => {
+                            button.addEventListener("click", function () {
+                                let eventId = this.getAttribute("data-event-id");
+
+                                fetch("/book-event/", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded",
+                                        "X-CSRFToken": "{{ csrf_token }}"
+                                    },
+                                    body: `event_id=${eventId}`
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        alert(data.message);
+                                    })
+                                    .catch(error => console.error("Error:", error));
+                            });
+                        });
+                    });
+                </script>
+
+                <!-- Pagination -->
+
+
+                <!-- Create Event Modal -->
+                <!-- <div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createEventModalLabel">Create New Event</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="createEventForm">
+                                    <div class="mb-3">
+                                        <label for="eventTitle" class="form-label">Event Title</label>
+                                        <input type="text" class="form-control" id="eventTitle" required>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="eventCategory" class="form-label">Category</label>
+                                            <select class="form-select" id="eventCategory" required>
+                                                <option value="" selected disabled>Select a category</option>
+                                                <option value="academic">Academic</option>
+                                                <option value="arts">Arts & Culture</option>
+                                                <option value="career">Career</option>
+                                                <option value="sports">Sports</option>
+                                                <option value="social">Social</option>
+                                                <option value="tech">Technology</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="eventLocation" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="eventLocation" required>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="eventDate" class="form-label">Date</label>
+                                            <input type="date" class="form-control" id="eventDate" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="eventTime" class="form-label">Time</label>
+                                            <input type="time" class="form-control" id="eventTime" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="eventDescription" class="form-label">Description</label>
+                                        <textarea class="form-control" id="eventDescription" rows="4"
+                                            required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="eventImage" class="form-label">Event Image</label>
+                                        <input type="file" class="form-control" id="eventImage">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" id="submitEvent">Create Event</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </section>
+
+        <section style="
+        max-height: 100vh; 
+        overflow-y: auto; 
+        padding: 10px;
+        scrollbar-width: thin; 
+        scrollbar-color: #888 #222;
+        " id="book-event" class="tab-content">
+            <div class="container dashboard-booking-section">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h3 style="color: aliceblue;" class="mb-3">Literary Festival 2025</h3>
+                        <p style="color: aliceblue !important; " class="text-muted">Book your sessions for the upcoming
+                            literary event. Limited seats
+                            available!</p>
+
+                        <!-- Navigation tabs -->
+
+
+                    </div>
+                    <div id="bookingTabContent">
+                        <!-- Available Sessions Tab -->
+
+                        <div class="tab-pane fade show active" id="available-sessions" role="tabpanel">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
+                                        <input type="text" class="form-control" id="searchSessions"
+                                            placeholder="Search by author, title or topic">
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <!-- Session 1 -->
+                                        <div class="container mt-5">
+                                            <div class="event-session session-available p-4 border rounded"
+                                                id="sessionDetails">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-6">
+                                                        <h5 id="sessionTitle">Tech Workshop</h5>
+                                                        <p id="sessionDescription" class="mb-1">Join us for an exciting
+                                                            tech workshop covering the latest trends.</p>
+                                                        <div class="session-time">
+                                                            <i class="far fa-calendar-alt me-2"></i>
+                                                            <span id="sessionDate">March 25, 2025</span> •
+                                                            <span id="sessionTime">10:00 AM</span>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="mt-2">
+                                                            <i class="fas fa-map-marker-alt me-2"></i>
+                                                            <span id="sessionVenue">Auditorium Hall</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                                        <button class="btn btn-outline-primary" id="bookSessionBtn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#bookingModal">Proceed to Booking</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Booking & Payment Modal -->
+                                        <div class="modal fade" id="bookingModal" tabindex="-1"
+                                            aria-labelledby="bookingModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="bookingModalLabel">Confirm Your
+                                                            Booking</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Event Details -->
+                                                        <h6>Event Details</h6>
+                                                        <p><strong>Event:</strong> <span id="modalEventTitle">Tech
+                                                                Workshop</span></p>
+                                                        <p><strong>Date:</strong> <span id="modalEventDate">March 25,
+                                                                2025</span></p>
+                                                        <p><strong>Time:</strong> <span id="modalEventTime">10:00
+                                                                AM</span></p>
+                                                        <p><strong>Venue:</strong> <span id="modalEventVenue">Auditorium
+                                                                Hall</span></p>
+
+
+                                                        <!-- User Details Form -->
+                                                        <h6>Enter Your Details</h6>
+                                                        <form id="bookingForm">
+                                                            <div class="mb-3">
+                                                                <label for="userName" class="form-label">Full
+                                                                    Name</label>
+                                                                <input type="text" class="form-control" id="userName"
+                                                                    placeholder="Enter your name" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="userEmail" class="form-label">Email
+                                                                    Address</label>
+                                                                <input type="email" class="form-control" id="userEmail"
+                                                                    placeholder="Enter your email" required>
+                                                            </div>
+                                                            <hr>
+
+                                                            <!-- Payment Section -->
+                                                            <h6>Payment Details</h6>
+                                                            <p><strong>Amount:</strong> <span
+                                                                    id="modalEventAmount">Amount</span></p>
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Select Payment Method</label>
+                                                                <select class="form-select" id="paymentMethod" required>
+                                                                    <option value="UPI">UPI</option>
+                                                                    <option value="Card">Credit/Debit Card</option>
+                                                                    <option value="NetBanking">Net Banking</option>
+                                                                </select>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+
+
+
+
+                                                        <form id="modalEventForm" method="post" action="">
+                                                            {% csrf_token %}
+                                                            <button id="payNow" type="submit"
+                                                                class="btn btn-primary">Pay
+                                                            </button>
+                                                        </form>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                        {% endfor %}
+                                        {% endif %}
+
+
+                                        <script>
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                                const bookButtons = document.querySelectorAll(".book-btn");
+
+                                                bookButtons.forEach(button => {
+                                                    button.addEventListener("click", function () {
+                                                        // Get event details from button attributes
+                                                        const eventName = this.getAttribute("data-name");
+                                                        const eventDate = this.getAttribute("data-date");
+                                                        const eventTime = this.getAttribute("data-time");
+                                                        const eventVenue = this.getAttribute("data-venue");
+                                                        let eventPrice = this.getAttribute("data-price");
+
+                                                        // Handle missing price
+                                                        if (!eventPrice || eventPrice.trim() === "") {
+                                                            eventPrice = "Free"; // Default to Free if no price is given
+                                                        }
+
+                                                        // Update session details
+                                                        document.getElementById("sessionTitle").textContent = eventName;
+                                                        document.getElementById("sessionDate").textContent = eventDate;
+                                                        document.getElementById("sessionTime").textContent = eventTime;
+                                                        document.getElementById("sessionVenue").textContent = eventVenue;
+
+                                                        // Update price in modal
+                                                        document.getElementById("modalEventAmount").textContent = eventPrice;
+
+                                                        // Update payment button text
+                                                        const payButton = document.getElementById("payNow");
+                                                        if (eventPrice.toLowerCase() === "free") {
+                                                            payButton.textContent = "Confirm Booking"; // Change button if free
+                                                            payButton.classList.replace("btn-success", "btn-primary");
+                                                        } else {
+                                                            payButton.textContent = `Pay ₹${eventPrice}`;
+                                                            payButton.classList.replace("btn-primary", "btn-success");
+                                                        }
+
+                                                        // Show session details
+                                                        document.getElementById("sessionDetails").style.display = "block";
+                                                    });
+                                                });
+
+                                                // Proceed to booking button
+                                                document.getElementById("bookSessionBtn").addEventListener("click", function () {
+                                                    // Copy event details to the modal
+                                                    document.getElementById("modalEventTitle").textContent = document.getElementById("sessionTitle").textContent;
+                                                    document.getElementById("modalEventDate").textContent = document.getElementById("sessionDate").textContent;
+                                                    document.getElementById("modalEventTime").textContent = document.getElementById("sessionTime").textContent;
+                                                    document.getElementById("modalEventVenue").textContent = document.getElementById("sessionVenue").textContent;
+                                                });
+                                            });
+                                            document.getElementById("payNow").addEventListener("click", function () {
+                                                let name = document.getElementById("userName").value;
+                                                let email = document.getElementById("userEmail").value;
+                                                let paymentMethod = document.getElementById("paymentMethod").value;
+
+                                                if (name === "" || email === "") {
+                                                    alert("Please fill in your details.");
+                                                } else {
+                                                    alert(`Payment successful! 🎉\n\nName: ${name}\nEmail: ${email}\nPayment Method: ${paymentMethod}`);
+                                                    let modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                                                    modal.hide();
+                                                }
+                                            });
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                                document.querySelectorAll(".book-btn").forEach(function (button) {
+                                                    button.addEventListener("click", function () {
+                                                        let eventId = this.getAttribute("data-eventid").trim(); // Get event ID
+                                                        let form = document.getElementById("modalEventForm");
+
+                                                        if (eventId) {
+                                                            form.action = `/auth/book/${eventId}/`; // Set dynamic URL
+                                                        } else {
+                                                            alert("Error: Event ID is missing!");
+                                                        }
+                                                    });
+                                                });
+                                            });
+
+                                        </script>
+                                        <!-- <div class="event-session session-available" id="sessionDetails">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h5 id="sessionTitle">Event Name</h5>
+                                        <p id="sessionDescription" class="mb-1">Event details will appear here when you click "Book".</p>
+                                        <div class="session-time"><i class="far fa-calendar-alt me-2"></i>
+                                            <span id="sessionDate">Date</span> • 
+                                            <span id="sessionTime">Time</span>
+                                        </div>
+                                        <div class="mt-2"><i class="fas fa-map-marker-alt me-2"></i>
+                                            <span id="sessionVenue">Venue</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                        <button class="btn btn-outline-primary" id="bookSessionBtn">Proceed to Booking</button>
+                                    </div>
+                                </div>
+                            </div> -->
+
+
+                                        <!-- Session 2 -->
+
+                                    </div>
+                                </div>
+
+                                <!-- Booking Confirmation Message -->
+                                <div class="booking-confirmation" id="bookingConfirmation">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-1 text-center">
+                                            <i class="fas fa-check-circle fa-2x"></i>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h5 class="mb-1">Booking Confirmed!</h5>
+                                            <p class="mb-0" id="confirmationText">You have successfully booked a seat
+                                                for [Session
+                                                Name].</p>
+                                        </div>
+                                        <div class="col-md-2 text-md-end">
+                                            <button class="btn btn-sm btn-outline-success"
+                                                id="closeConfirmation">Dismiss</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="my-bookings" role="tabpanel">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="filterBookings"
+                                            placeholder="Search my bookings">
+                                    </div>
+                                    <div class="col-md-6 text-md-end">
+                                        <button class="btn btn-outline-primary" id="calendarExport">
+                                            <i class="fas fa-calendar-alt me-2"></i>Export to Calendar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5 class="mb-3">Your Current Bookings</h5>
+
+                                        <!-- Display when no bookings exist -->
+                                        <div id="noBookings" style="display: none;">
+                                            <div class="alert alert-info">
+                                                You haven't booked any sessions yet. Go to Available Sessions to book
+                                                your spots!
+                                            </div>
+                                        </div>
+
+                                        <!-- Bookings list - initially empty, will be populated by JavaScript -->
+                                        <div id="bookingsList">
+                                            <!-- Sample booking (will be hidden and used as template) -->
+                                            <div class="my-bookings-item d-none" id="bookingTemplate">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-8">
+                                                        <h5 class="booking-title">Session Title</h5>
+                                                        <div class="mb-1"><i class="far fa-calendar-alt me-2"></i><span
+                                                                class="booking-date">Date & Time</span></div>
+                                                        <div><i class="fas fa-map-marker-alt me-2"></i><span
+                                                                class="booking-location">Location</span></div>
+                                                    </div>
+                                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                                        <button
+                                                            class="btn btn-sm btn-outline-danger cancel-booking">Cancel
+                                                            Booking</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- My Bookings Tab -->
+
+                        </div>
+                    </div>
+
+        </section>
+
+
+
+        <!-- Event Details Modal -->
+
+
+
+
+
+        <!-- User Details Modal -->
+        <!-- <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userName">User Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="userImage" class="user-avatar mb-3" src="" alt="User Image">
+                        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                        <p><strong>Role:</strong> <span id="userRole"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- User Details Modal -->
+        <!-- <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                        
+                    
+                    {% for user in users %}
+                        
+                        
+                       
+                    <form method="POST" action="{% url 'admin_dashboard' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="{{user.user.id}}" id="deleteUserId">
+                        <p>Are you sure you want to delete this user?</p>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div> -->
+
+
+        <section style="
+        max-height: 100vh; 
+        overflow-y: auto; 
+        padding: 10px;
+        scrollbar-width: thin; 
+        scrollbar-color: #888 #222;
+        " id="clubs" class="tab-content">
+            <div class="container py-5">
+                <h1 class="mb-4">Clubs</h1>
+
+                <!-- Club Navigation Tabs -->
+                <ul class="nav nav-tabs mb-4" id="clubTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="all-clubs-tab" data-bs-toggle="tab"
+                            data-bs-target="#all-clubs" type="button" role="tab">All Clubs</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="my-clubs-tab" data-bs-toggle="tab" data-bs-target="#my-clubs"
+                            type="button" role="tab">My Clubs</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="" id="clubTabsContent">
+                    <!-- All Clubs Tab -->
+                    <div class="tab-pane fade show active" id="all-clubs" role="tabpanel">
+                        <!-- Search and Filter -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="search-container">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" class="form-control search-input" id="clubSearch"
+                                        placeholder="Search clubs...">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Club Cards -->
+                        <div class="row" id="allClubsList">
+                            {% for club in clubs %}
+
+                            <!-- Club Card 1 -->
+                            <div class="col-md-4">
+                                <div class="card club-card">
+                                    <span class="badge bg-success club-badge">{{club.status}}</span>
+                                    <img src="{{club.club_pic.url}}" alt="Club Image" class="club-image">
+                                    <div class="card-body">
+                                        <h5 style="color: #000 !important;" class="card-title">{{club.name}}</h5>
+                                        <div class="mb-2">
+                                            <span class="category-badge">{{club.created_by}}</span>
+                                        </div>
+                                        <p class="card-text">{{club.description}}</p>
+                                        <a style="color: #888 ;"
+                                            href="{{club.contact_email}}">{{club.contact_email}}</a>
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="club-member-count">
+                                                <i class="fas fa-users"></i> {{club.no_of_members}} members
+                                            </div>
+                                            <small class="text-muted">Created at {{club.created_at}}</small>
+                                        </div>
+                                        <div class="d-grid">
+                                            {% if is_booked %}
+                                            <button class="btn btn-success" disabled>Booked</button>
+                                            {% else %}
+                                            <form action="{% url 'book_volunteer' club.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-primary">Book For
+                                                    Volunteer</button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% endif %}"
+                                role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+
+                            <!-- Club Card 2 -->
+                        </div>
+                    </div>
+
+                    <!-- My Clubs Tab -->
+                    <div class="tab-pane fade" id="my-clubs" role="tabpanel">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="search-container">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" class="form-control search-input" id="myClubSearch"
+                                        placeholder="Search my clubs...">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <!-- My Clubs List -->
+                        <div class="row" id="myClubsList">
+                            <!-- My Club 1 -->
+
+                            {% for booked in bookedclub %}
+
+
+                            <div class="col-md-4">
+                                <div class="card club-card">
+                                    <span class="badge bg-primary club-badge">{{booked.role}}</span>
+                                    <div class="card-body">
+                                        <h5 style="color: #000 !important;" class="card-title">{{booked.club}}</h5>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                            <small class="text-muted">Joined:{{booked.approved_at}}</small>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="payments" class="tab-content">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="mb-0">Payment History</h4>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control" placeholder="Search transactions">
+                                            <button class="btn btn-outline-secondary" type="button">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Transaction ID</th>
+                                                <th>Date</th>
+                                                <th>Event</th>
+                                                <!-- <th>Amount</th> -->
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for event in bookedevent %}
+
+
+
+                                            <tr>
+                                                <td><span class="text-secondary">##{{event.id}}</span></td>
+                                                <td>{{event.booking_date}}</td>
+                                                <td>{{event.event}}</td>
+                                                <!-- <td class="text-end">$29.99</td> -->
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-secondary"
+                                                        data-bs-toggle="tooltip" title="View Invoice">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                            fill="currentColor" class="bi bi-file-earmark-text"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                                                            <path
+                                                                d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="reports" class="tab-content">
+            <h1>Reports</h1>
+            <p>Under working......................</p>
+        </section>
+        <section id="notifications" class="tab-content">
+            <div class="container">
+                <div class="notification-container">
+                    <h2 style="color: aliceblue !important;" class="text-center mb-4">📢 Notifications</h2>
+
+                    <!-- Search Bar -->
+                    <div class="notifications">
+                        <h5>Notifications</h5>
+                        {% for notification in request.user.notifications.all %}
+                        <div
+                            class="alert {% if not notification.is_read %} alert-warning {% else %} alert-light {% endif %}">
+                            {{ notification.message }}
+                            {% if notification.url %}
+                            <a href="{{ notification.url }}" class="btn btn-sm btn-primary">View</a>
+                            {% endif %}
+                            <form action="{% url 'mark_notification_read' notification.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-secondary">Mark as Read</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>No new notifications</p>
+                        {% endfor %}
+                    </div>
+
+
+                </div>
+            </div>
+        </section>
+        </section>
+        <section id="chatbot" class="tab-content">
+            <div class="container py-4 d-flex flex-column h-100">
+                <!-- Header -->
+                <div class="row mb-4">
+                    <div class="col text-center">
+                        <h2 style="color: #fff !important;" class="mb-0">
+                            <i class="fas fa-robot me-2 text-primary"></i>
+                            Event Management Assistant
+                        </h2>
+                        <p style="color: #fff !important;" class="text-muted">How can I help you with your event management today?</p>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="row flex-grow-1">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card h-100 border-0 shadow">
+                            <div class="chat-header d-flex align-items-center">
+                                <div class="bot-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0">EventBot</h5>
+                                    <small>Always here to help</small>
+                                </div>
+                            </div>
+
+                            <div class="chat-container p-3" id="chatMessages">
+                                <div class="message bot-message">
+                                    <p class="mb-0">Hi there! I'm your Event Management Assistant. I can help you with:
+                                    </p>
+                                    <ul class="mb-0 ps-3 mt-2">
+                                        <li>Creating and managing events</li>
+                                        <li>Managing guest lists and RSVPs</li>
+                                        <li>Setting up ticketing and registration</li>
+                                        <li>Finding venues and vendors</li>
+                                        <li>Scheduling and timeline planning</li>
+                                    </ul>
+                                </div>
+
+                                <div class="suggestion-chips">
+                                    <button class="suggestion-chip"
+                                        onclick="sendSuggestion('How do I create a new event?')">Create new
+                                        event</button>
+                                    <button class="suggestion-chip"
+                                        onclick="sendSuggestion('How do I manage RSVPs?')">Manage RSVPs</button>
+                                    <button class="suggestion-chip"
+                                        onclick="sendSuggestion('How do I set up ticketing?')">Set up ticketing</button>
+                                    <button class="suggestion-chip"
+                                        onclick="sendSuggestion('How do I generate reports?')">Generate reports</button>
+                                </div>
+
+                                <!-- Typing indicator -->
+                                <div class="typing-indicator" id="typingIndicator">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <div class="chat-footer">
+                                <form id="messageForm">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Type your question here..."
+                                            id="userInput">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Action Button -->
+                <div class="quick-actions">
+                    <button class="quick-action-btn" data-bs-toggle="tooltip" data-bs-placement="left"
+                        title="Quick Help">
+                        <i class="fas fa-bolt"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <section id="logout" class="tab-content">
+            <h1>Logout</h1>
+            <p>Click below to log out.</p>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </section>
+    </main>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatMessages = document.getElementById('chatMessages');
+        const messageForm = document.getElementById('messageForm');
+        const userInput = document.getElementById('userInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Common help responses
+        const helpResponses = {
+            'create new event': {
+                title: 'Creating a New Event',
+                content: `
+                    <p>To create a new event, follow these steps:</p>
+                    <ol>
+                        <li>Navigate to the Dashboard and click "Create Event" button</li>
+                        <li>Fill in the event details form with name, date, time, and location</li>
+                        <li>Add a description and upload an event banner image</li>
+                        <li>Set your event privacy (public or private)</li>
+                        <li>Click "Save & Continue" to move to the next steps</li>
+                    </ol>
+                    <img src="/api/placeholder/400/320" alt="Create event form">
+                    <p>After creating the event, you'll be able to manage tickets, guest lists, and more from the event dashboard.</p>
+                `
+            },
+            'manage rsvps': {
+                title: 'Managing RSVPs',
+                content: `
+                    <p>To manage your event RSVPs:</p>
+                    <ol>
+                        <li>Go to your event dashboard</li>
+                        <li>Click on the "Guests" or "RSVPs" tab</li>
+                        <li>Here you can view all respondents and their status</li>
+                        <li>Use filters to sort by response type (Yes, No, Maybe)</li>
+                        <li>Export the guest list as CSV or send group messages</li>
+                    </ol>
+                    <p>You can also set automatic reminders for guests who haven't responded yet.</p>
+                `
+            },
+            'set up ticketing': {
+                title: 'Setting Up Event Tickets',
+                content: `
+                    <p>To set up tickets for your event:</p>
+                    <ol>
+                        <li>Go to your event dashboard</li>
+                        <li>Select the "Tickets" tab</li>
+                        <li>Click "Add Ticket Type"</li>
+                        <li>Configure details like name, price, quantity, and sale period</li>
+                        <li>Set up any special discounts or promo codes</li>
+                        <li>Click "Save" to publish your tickets</li>
+                    </ol>
+                    <p>You can create multiple ticket types for different audience segments or pricing tiers.</p>
+                `
+            },
+            'generate reports': {
+                title: 'Generating Event Reports',
+                content: `
+                    <p>To generate reports for your events:</p>
+                    <ol>
+                        <li>Navigate to your event dashboard</li>
+                        <li>Click on the "Reports" or "Analytics" tab</li>
+                        <li>Select the type of report you need (attendance, sales, etc.)</li>
+                        <li>Choose your date range and any specific filters</li>
+                        <li>Click "Generate Report"</li>
+                        <li>Download as PDF, CSV, or Excel format</li>
+                    </ol>
+                    <p>Reports can help you analyze ticket sales, attendance patterns, revenue, and more.</p>
+                `
+            }
+        };
+        
+        // Handle form submission
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = userInput.value.trim();
+            if (message === '') return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            
+            // Clear input
+            userInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            
+            // Simulate bot response
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                processBotResponse(message);
+            }, 1500);
+        });
+        
+        // Function to handle suggestion chip clicks
+        window.sendSuggestion = function(suggestion) {
+            addMessage(suggestion, 'user');
+            
+            // Show typing indicator
+            typingIndicator.style.display = 'block';
+            
+            // Simulate bot response
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                processBotResponse(suggestion);
+            }, 1500);
+        };
+        
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            if (sender === 'user') {
+                const messagePara = document.createElement('p');
+                messagePara.className = 'mb-0';
+                messagePara.textContent = content;
+                messageDiv.appendChild(messagePara);
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+        
+        function processBotResponse(userMessage) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            // Check for known help topics
+            let matched = false;
+            for (const [keyword, response] of Object.entries(helpResponses)) {
+                if (userMessage.toLowerCase().includes(keyword)) {
+                    matched = true;
+                    
+                    // Create help article response
+                    const articleDiv = document.createElement('div');
+                    articleDiv.className = 'help-article';
+                    
+                    const title = document.createElement('h5');
+                    title.textContent = response.title;
+                    articleDiv.appendChild(title);
+                    
+                    articleDiv.insertAdjacentHTML('beforeend', response.content);
+                    
+                    // Add rating buttons
+                    const ratingDiv = document.createElement('div');
+                    ratingDiv.className = 'mt-3';
+                    ratingDiv.innerHTML = `
+                        <p class="mb-2 text-muted small">Was this helpful?</p>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-success">
+                                <i class="fas fa-thumbs-up me-1"></i> Yes
+                            </button>
+                            <button class="btn btn-outline-danger">
+                                <i class="fas fa-thumbs-down me-1"></i> No
+                            </button>
+                        </div>
+                    `;
+                    
+                    articleDiv.appendChild(ratingDiv);
+                    messageDiv.appendChild(articleDiv);
+                    break;
+                }
+            }
+            
+            // Generic response if no match found
+            if (!matched) {
+                const messagePara = document.createElement('p');
+                messagePara.className = 'mb-0';
+                messagePara.textContent = "I can help you with that! Here's what you need to know about " + 
+                                          userMessage.toLowerCase().replace('how do i', '').replace('?', '') + ":";
+                
+                const listEl = document.createElement('ul');
+                listEl.className = 'ps-3 mt-2 mb-0';
+                
+                const suggestions = [
+                    "Check the Events section in your dashboard",
+                    "Our documentation has a detailed guide on this topic",
+                    "You might need admin permissions for this action",
+                    "Try using the search feature with specific keywords"
+                ];
+                
+                suggestions.forEach(suggestion => {
+                    const li = document.createElement('li');
+                    li.textContent = suggestion;
+                    listEl.appendChild(li);
+                });
+                
+                messageDiv.appendChild(messagePara);
+                messageDiv.appendChild(listEl);
+                
+                // Add "contact support" option
+                const contactDiv = document.createElement('div');
+                contactDiv.className = 'mt-3';
+                contactDiv.innerHTML = `
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-headset me-1"></i> Contact Live Support
+                    </button>
+                `;
+                
+                messageDiv.appendChild(contactDiv);
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Add new suggestion chips after response
+            const suggestionsDiv = document.createElement('div');
+            suggestionsDiv.className = 'suggestion-chips';
+            
+            const newSuggestions = [
+                "How do I customize event pages?",
+                "Can I send email invitations?",
+                "How to track attendance?",
+                "Setting up payment methods"
+            ];
+            
+            newSuggestions.forEach(suggestion => {
+                const chip = document.createElement('button');
+                chip.className = 'suggestion-chip';
+                chip.textContent = suggestion;
+                chip.onclick = function() {
+                    sendSuggestion(suggestion);
+                };
+                suggestionsDiv.appendChild(chip);
+            });
+            
+            chatMessages.appendChild(suggestionsDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+</script>
 
 {% endblock %}

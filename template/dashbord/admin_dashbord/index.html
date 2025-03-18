@@ -2,9 +2,723 @@
 {% block content %}
 {% load static %}
 
-<div style="margin:0 auto; width: 900px; margin-top:200px; margin-bottom:200px;" class="container">
-    <h2>Welcome to the Admin Dashboard!</h2>
-<a href="{% url 'logout' %}">Logout</a>
+<div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav class="nav flex-column">
+            <a href="#" class="nav-link active" data-bs-toggle="tab" data-tab="dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+
+            <!-- Events -->
+            <div class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#eventDropdown">
+                    <span><i class="fas fa-calendar"></i> Events</span> <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="collapse ps-3" id="eventDropdown">
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="create-event">Create Event</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="manage-event">Manage Events</a>
+                </div>
+            </div>
+
+            <!-- Users -->
+            <div class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#usersDropdown" aria-expanded="false" aria-controls="usersDropdown">
+                    <span><i class="fas fa-users"></i> Users</span>
+                    <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="collapse ps-3" id="usersDropdown">
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="admin">admins</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="teacher">Teachers</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="student">Students</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="outsider">outsiders</a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="eventhead">Event Head</a>
+
+
+                    <!-- User Types Sub-dropdown -->
+
+                </div>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+                    href="#clubDropdown">
+                    <span> <i class="fas fa-users"></i> Clubs&Societies</span> <i class="fas fa-chevron-down"></i>
+                </a>
+                <div class="collapse ps-3" id="clubDropdown">
+                    <a href="{% url 'create_club' %}" class="nav-link sub-tab">Create </a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab" data-tab="manage-club">Manage </a>
+                    <a href="#" class="nav-link sub-tab" data-bs-toggle="tab"
+                        data-tab="manage-volunteer">manage-volunteer </a>
+                </div>
+            </div>
+
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="bookings">
+                <i class="fas fa-bookmark"></i> Bookings
+            </a>
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="payments">
+                <i class="fas fa-credit-card"></i> Payments
+            </a>
+            <!-- <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="reports">
+                <i class="fas fa-chart-line"></i> Reports
+            </a> -->
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="notifications">
+                <i class="fas fa-bell"></i> Notifications
+            </a>
+            <!-- <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="settings">
+                <i class="fas fa-cog"></i> Settings
+            </a> -->
+
+        </nav>
+    </aside>
+
+    <!-- Right Content Area -->
+    <main style="
+    max-height: 80vh; 
+    overflow-y: auto; 
+    padding: 10px;
+    scrollbar-width: thin; 
+    scrollbar-color: #888 #222;
+" class="content">
+        <section id="dashboard" class="tab-content active">
+
+            <!-- <div class="container">
+                <div class="form-container">
+                    <h2 class="text-center mb-4">Upload Event Photo</h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                {% for key, value in categories %}
+                                <option value="{{ key }}">{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Upload Image</label>
+                            <input type="file" name="image" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-custom">Upload</button>
+                    </form>
+                </div>
+            </div> -->
+            <div id="formCarousel" class="carousel slide carousel-container" data-bs-ride="carousel">
+                <div class="carousel-inner">
+
+                    <!-- Upload Event Photo -->
+                    <div class="carousel-item active">
+                        <div class="form-container">
+                            <h2 class="text-center mb-3">Upload Event Photo</h2>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" name="title" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select name="category" class="form-select">
+                                        {% for key, value in categories %}
+                                        <option value="{{ key }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Image</label>
+                                    <input type="file" name="image" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-custom">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Upload Sponsor Image -->
+                    <div class="carousel-item">
+                        <div class="form-container">
+                            <h2 class="text-center mb-3">Upload Sponsor Image & Name</h2>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Sponsor Name</label>
+                                    <input type="text" name="sponsor_name" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Sponsor Logo</label>
+                                    <input type="file" name="sponsor_image" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-custom">Upload Sponsor</button>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <!-- Upload Other Details -->
+                    <div class="carousel-item">
+                        <div class="form-container">
+                            <h2 class="text-center mb-3">Upload Other Details</h2>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" name="other_title" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="description" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Image</label>
+                                    <input type="file" name="other_image" class="form-control" required>
+                                </div>
+                                <button type="submit" class="btn btn-custom">Upload Details</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#formCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#formCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+
+
+
+        </section>
+        <section id="create-event" class="tab-content">
+            <div class="container">
+                <h1 style="color: aliceblue;" class="mb-4"><i class="fas fa-calendar-plus"></i> Create Event</h1>
+
+                <div style="border: 2px solid #fff; border-radius:8px;" class=" shadow-lg p-4 border-1">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- Event Name -->
+                            <div class="col-md-6">
+                                <label class="form-label">Event Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Enter event name"
+                                    required>
+                            </div>
+
+                            <!-- Date & Time -->
+                            <div class="col-md-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" name="date" class="form-control" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Time</label>
+                                <input type="time" name="time" class="form-control" required>
+                            </div>
+
+                            <!-- Event Category -->
+                            <div class="col-md-6">
+                                <label class="form-label">Category</label>
+                                <select name="category" class="form-select">
+                                    {% for key, value in categories %}
+                                    <option value="{{ key }}">{{ value }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Venue -->
+                            <div class="col-md-6">
+                                <label class="form-label">Venue</label>
+                                <input type="text" name="venue" class="form-control" placeholder="Enter venue" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">price</label>
+                                <input type="text" name="price" class="form-control" placeholder="Enter price" required>
+                            </div>
+
+                            <!-- Event Poster Upload -->
+                            <div class="col-md-6">
+                                <label class="form-label">Upload Event Poster</label>
+                                <input type="file" name="poster" class="form-control">
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-md-12">
+                                <label class="form-label">Description</label>
+                                <textarea name="description" class="form-control" rows="3"
+                                    placeholder="Enter event details..." required></textarea>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="col-md-12 text-end">
+                                <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                                <button type="submit" class="btn btn-primary">Create Event</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section id="manage-event" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-calendar-alt"></i> Manage Events</h1>
+
+            <div class="row g-4">
+
+                {% for event in events %}
+                <div class="col-md-4">
+                    <div class="card event-card">
+                        <img src="{{ event.poster.url }}" class="card-img-top" alt="Event Poster">
+                        <div class="card-body text-center">
+                            <h5 style="color: #fff;" class="card-title">{{ event.name }}</h5>
+                            <span style="color: #fff !important;">price {{ event.price }}</span>
+
+                            <p>
+                                <i class="fas fa-calendar"></i> {{ event.date }} |
+                                <i class="fas fa-map-marker-alt"></i> {{ event.venue }}
+
+                            </p>
+
+                            <!-- Delete Form -->
+                            <form action="{% url 'delete_event' event.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+
+                <!-- Event Card 2 -->
+
+            </div>
+        </section>
+
+
+        <section id="manage-club" class="tab-content">
+            <h1 style="color: #fff;" class="text-center mb-4"><i class="fas fa-calendar-alt"></i> Manage Events</h1>
+
+
+            <div class="row" id="allClubsList">
+                {% for club in clubs %}
+
+                <!-- Club Card 1 -->
+                <div class="col-md-4">
+                    <div class="card club-card">
+                        <span class="badge bg-success club-badge">{{club.status}}</span>
+                        <img src="{{club.club_pic.url}}" alt="Club Image" class="club-image">
+                        <div class="card-body">
+                            <h5 style="color: #000 !important;" class="card-title">{{club.name}}</h5>
+                            <div class="mb-2">
+                                <span class="category-badge">{{club.created_by}}</span>
+                            </div>
+                            <p class="card-text">{{club.description}}</p>
+                            <a style="color: #888 ;" href="{{club.contact_email}}">{{club.contact_email}}</a>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="club-member-count">
+                                    <i class="fas fa-users"></i> {{club.no_of_members}} members
+                                </div>
+                                <small class="text-muted">Created at {{club.created_at}}</small>
+                            </div>
+                            <form action="{% url 'delete_club' club.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Club Card 2 -->
+            </div>
+
+        </section>
+        <section id="manage-volunteer" class="tab-content">
+            <h1 style="color: #fff;" class="text-center mb-4"><i class="fas fa-calendar-alt"></i> Manage Volunteer</h1>
+
+            {% for app in aprrove %}
+
+
+            <div class="notification-item alert alert-info">
+                <div>
+                    <h5 style="color: #000 !important;" class="mb-1"> <b>{{app.user}}</b> whoe joined at
+                        <b>{{app.approved_at}}</b> in <b>{{app.club}}</b>
+                    </h5>
+
+
+
+                </div>
+
+                <!-- Display Messages -->
+
+
+            </div>
+            {% endfor %}
+
+
+
+        </section>
+
+        <!-- Event Details Modal -->
+
+
+        <!-- Event Details Modal -->
+
+
+
+        <section id="admin" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-users"></i> Teacher</h1>
+
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" class="search-box" id="searchUser" onkeyup="searchUsers()"
+                    placeholder="🔍 Search users...">
+            </div>
+
+            <div class="row g-4" id="userList">
+                <!-- User Card 1 -->
+                <div class="row">
+                    {% for teacher in admins %}
+                    <div class="col-md-4" style="margin: 20px 0;">
+                        <div class="user-card" data-bs-toggle="modal" data-bs-target="#userModal"
+                            onclick="showUserDetails('{{ user.user.get_full_name }}', '{{ user.get_role_display }}', '{{ user.user.email }}', '{{ user.profile_picture.url }}')">
+                            <img src="{{ teacher.profile_picture.url }}" class="user-avatar" alt="User Avatar">
+                            <h5>{{ teacher.user.username }}</h5>
+                            <p><i class="fas fa-envelope"></i> {{ teacher.user.email }}</p>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                <!-- User Card 2 -->
+
+            </div>
+        </section>
+        <section id="teacher" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-users"></i> Teacher</h1>
+
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" class="search-box" id="searchUser" onkeyup="searchUsers()"
+                    placeholder="🔍 Search users...">
+            </div>
+
+            <div class="row g-4" id="userList">
+                <!-- User Card 1 -->
+                <div class="row">
+                    {% for teacher in teachers %}
+                    <div class="col-md-4" style="margin: 20px 0;">
+                        <div class="user-card" data-bs-toggle="modal" data-bs-target="#userModal"
+                            onclick="showUserDetails('{{ user.user.get_full_name }}', '{{ user.get_role_display }}', '{{ user.user.email }}', '{{ user.profile_picture.url }}')">
+                            <img src="{{ teacher.profile_picture.url }}" class="user-avatar" alt="User Avatar">
+                            <h5>{{ teacher.user.username }}</h5>
+                            <p><i class="fas fa-envelope"></i> {{ teacher.user.email }}</p>
+                            <form method="POST" action="{% url 'delete_user' teacher.user.id %}"
+                                onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+                <!-- User Card 2 -->
+
+            </div>
+        </section>
+
+        <!-- User Details Modal -->
+
+        <section id="student" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-users"></i> Students</h1>
+
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" class="search-box" id="searchUser" onkeyup="searchUsers()"
+                    placeholder="🔍 Search users...">
+            </div>
+
+            <div class="row g-4" id="userList">
+                <!-- User Card 1 -->
+                <div class="col-md-4">
+
+                    {% for student in students %}
+
+
+                    <div class="user-card" data-bs-toggle="modal" data-bs-target="#userModal"
+                        onclick="showUserDetails('John Doe', 'Admin', 'johndoe@example.com', 'user1.jpg')">
+                        <img src="{{ student.profile_picture.url }}" class="user-avatar" alt="User Avatar">
+                        <h5>{{ student.user.username }}</h5>
+                        <p><i class="fas fa-envelope"></i> {{ student.user.email }}</p>
+                        <form method="POST" action="{% url 'delete_user' student.user.id %}"
+                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- User Card 2 -->
+
+            </div>
+        </section>
+
+        <!-- User Details Modal -->
+
+        <section id="outsider" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-users"></i> Out siders</h1>
+
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" class="search-box" id="searchUser" onkeyup="searchUsers()"
+                    placeholder="🔍 Search users...">
+            </div>
+
+            <div class="row g-4" id="userList">
+                <!-- User Card 1 -->
+                <div class="col-md-4">
+
+                    {% for other in others %}
+
+
+                    <div class="user-card" data-bs-toggle="modal" data-bs-target="#userModal"
+                        onclick="showUserDetails('John Doe', 'Admin', 'johndoe@example.com', 'user1.jpg')">
+                        <img src="{{ other.profile_picture.url }}" class="user-avatar" alt="User Avatar">
+                        <h5>{{other.user.username}}</h5>
+                        <p><i class="fas fa-envelope"></i>{{other.user.email}}</p>
+                        <form method="POST" action="{% url 'delete_user' other.user.id %}"
+                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- User Card 2 -->
+
+            </div>
+        </section>
+
+        <!-- User Details Modal -->
+        <!-- <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userName">User Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="userImage" class="user-avatar mb-3" src="" alt="User Image">
+                        <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                        <p><strong>Role:</strong> <span id="userRole"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <section id="eventhead" class="tab-content">
+            <h1 class="text-center mb-4"><i class="fas fa-users"></i> Event Head</h1>
+
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input type="text" class="search-box" id="searchUser" onkeyup="searchUsers()"
+                    placeholder="🔍 Search users...">
+            </div>
+
+            <div class="row g-4" id="userList">
+                {% for heads in event_heads %}
+                <div class="col-md-4">
+                    <div class="user-card" data-bs-toggle="modal" data-bs-target="#userModal"
+                        onclick="showUserDetails('{{ heads.user.username }}', '{{ heads.get_role_display }}', '{{ heads.user.email }}', '{{ heads.profile_picture.url }}', '{{ heads.user.id }}')">
+                        <img src="{{ heads.profile_picture.url }}" class="user-avatar" alt="User Avatar">
+                        <h5>{{ heads.user.username }}</h5>
+                        <p><i class="fas fa-envelope"></i> {{ heads.user.email }}</p>
+
+                        <!-- Delete Button -->
+                        <form method="POST" action="{% url 'delete_user' heads.user.id %}"
+                            onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm mt-2">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </section>
+
+        <!-- User Details Modal -->
+        <!-- <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                        
+                    
+                    {% for user in users %}
+                        
+                        
+                       
+                    <form method="POST" action="{% url 'admin_dashboard' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="{{user.user.id}}" id="deleteUserId">
+                        <p>Are you sure you want to delete this user?</p>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div> -->
+
+
+        <section id="bookings" class="tab-content">
+            <div class="container">
+                <div class="notification-container">
+                    <h2 style="color: aliceblue !important;" class="text-center mb-4">📢 booking</h2>
+
+                    <!-- Search Bar -->
+
+                    <!-- Notifications List -->
+
+                    <div id="notification-list">
+
+
+
+                        {% for contact in bookedclub %}
+
+                        <div class="notification-item alert alert-info">
+                            <div>
+                                <h5 style="color: #000 !important;" class="mb-1">
+                                    <b>{{ contact.user }}</b> was booked for
+                                    <b>{{ contact.club }} on {{ contact.joined_at }}</b>
+                                </h5>
+
+                                <form action="{% url 'approve_membership' contact.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">Allow</button>
+                                </form>
+                            </div>
+
+                            <!-- Display Messages -->
+
+
+                        </div>
+                        {% endfor %}
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %};">
+                                {{ message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+        </section>
+        <section id="payments" class="tab-content">
+            <div class="col">
+                <h4 class="mb-0">Payment History</h4>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <!-- <th>Amount</th> -->
+                        <th>Recieved From</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for event in bookedevent %}
+
+
+
+                    <tr>
+                        <td><span class="text-secondary">##{{event.id}}</span></td>
+                        <td>{{event.booking_date}}</td>
+                        <td>{{event.event}}</td>
+                        <!-- <td class="text-end">$29.99</td> -->
+                        <td><span class="badge bg-success">{{event.user}}</span></td>
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </section>
+        <!-- <section id="reports" class="tab-content">
+            <h1>Reports</h1>
+            <p>Generate event reports.</p>
+        </section> -->
+        <section id="notifications" class="tab-content">
+            <div class="container">
+                <div class="notification-container">
+                    <h2 style="color: aliceblue !important;" class="text-center mb-4">📢 Notifications</h2>
+
+                    <!-- Search Bar -->
+
+                    <!-- Notifications List -->
+                    <div id="notification-list">
+
+                        {% for contact in contact %}
+
+
+
+                        <div class="notification-item alert alert-info">
+                            <div>
+                                <h5 class="mb-1">{{contact.name}}</h5>
+                                <p class="mb-0">{{contact.message}}</p>
+                                <small class="timestamp">{{contact.submitted_at}}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="settings" class="tab-content">
+            <h1>Settings</h1>
+            <p>Manage system settings.</p>
+        </section>
+        <section id="logout" class="tab-content">
+            <h1>Logout</h1>
+            <p>Click below to log out.</p>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </section>
+    </main>
 </div>
 
 {% endblock %}

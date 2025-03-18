@@ -22,7 +22,6 @@
                                 <nav>
                                     <ul id="navigation">
                                         <li><a href="{% url 'home' %}">Home</a></li>
-                                        <li><a href="performer.html">Performer</a></li>
                                         <li><a href="#">Pages <i class="ti-angle-down"></i></a>
                                             <ul class="submenu">
                                                 <li><a href="about.html">About</a></li>
@@ -97,8 +96,7 @@
                                                 <hr class="dropdown-divider">
                                             </li>
                                             <li><a class="dropdown-item" href="">Profile</a></li>
-                                            <li><a  class="dropdown-item "
-                                                    href="{% url 'logout' %}">Logout</a></li>
+                                            <li><a class="dropdown-item " href="{% url 'logout' %}">Logout</a></li>
                                         </ul>
                                     </div>
                                     {% else %}
@@ -166,7 +164,7 @@
                             </div>
                         </div>
                         <!-- Outsider Card -->
-                        <div class="col-md-4 mb-3">
+                        <!-- <div class="col-md-4 mb-3">
                             <div class="card role-card" onclick="window.location.href='{% url 'others' %}'">
                                 <div class="card-body">
                                     <i class="fa fa-user-friends fa-3x"></i>
@@ -174,7 +172,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Teacher Card -->
+                        Teacher Card
                         <div class="col-md-4 mb-3">
                             <div class="card role-card" onclick="window.location.href='{% url 'teacher' %}'">
                                 <div class="card-body">
@@ -182,7 +180,7 @@
                                     <h5 class="mt-2">Teacher</h5>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -230,7 +228,14 @@
             <!-- Contact Form -->
             <div class="col-lg-4 col-md-12">
                 <h5>Contact Us</h5>
-                <form action="#" method="POST">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+
+                <form action="{% url 'home' %}" method="POST">
+                    {% csrf_token %}
                     <div class="mb-2">
                         <input type="text" class="form-control" name="name" placeholder="Your Name" required>
                     </div>
@@ -244,6 +249,7 @@
                     <button type="submit" class="btn btn-custom w-100">Send Message</button>
                 </form>
             </div>
+
         </div>
 
         <!-- Social Media -->

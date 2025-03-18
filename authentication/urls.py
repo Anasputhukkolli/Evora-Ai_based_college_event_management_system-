@@ -1,8 +1,8 @@
 from django.urls import path
 from django.urls import path, include
 from .views import adimin,others,teacher,event_head,student, admin_dashboard, logout_view,admin_register,admin_login_view,student_dashboard,student_register,student_login_view,teacher_register,teacher_login_view\
-    ,teacher_dashboard,event_head_dashboard,event_head_login_view,event_head_register,outsider_dashboard,outsider_login_view,outsider_register
-
+    ,teacher_dashboard,event_head_dashboard,event_head_login_view,event_head_register,outsider_dashboard,outsider_login_view,outsider_register,delete_user,delete_event\
+,create_club,delete_club,book_volunteer,approve_membership,book_event
 
 from . import views
 
@@ -15,6 +15,7 @@ urlpatterns = [
     
     
     
+    path('create_club/', create_club, name='create_club'),
     path('admin_dashboard/', admin_dashboard, name='admin_dashboard'),
     path('student_dashboard/', student_dashboard, name='student_dashboard'),
     path('teacher_dashboard/', teacher_dashboard, name='teacher_dashboard'),
@@ -39,5 +40,11 @@ urlpatterns = [
     
     path('logout/', logout_view, name='logout'),
      
-
-]
+    path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
+    path('delete-event/<int:event_id>/', delete_event, name='delete_event'),
+    path('delete-club/<int:club_id>/', delete_club, name='delete_club'),
+    
+    path('book-volunteer/<int:club_id>/', book_volunteer, name='book_volunteer'),
+    path('approve/<int:membership_id>/', approve_membership, name='approve_membership'),
+    path('book/<int:event_id>/', book_event, name='book_event'),      
+    ]

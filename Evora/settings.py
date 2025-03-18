@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "landing",
     "authentication",
+    'django_htmx'
 ]
 
 MIDDLEWARE = [
@@ -64,7 +65,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'authentication.context_processors.student_profile_processor',
             ],
         },
     },
@@ -128,9 +128,6 @@ STATICFILES_DIRS = [
 # For production: collect static files in 'staticfiles'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 
 
@@ -139,9 +136,4 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-AUTHENTICATION_BACKENDS = [
-    'authentication.backends.StudentAuthBackend',  # Custom student authentication
-    'django.contrib.auth.backends.ModelBackend',  # Default for admin authentication
-]
 

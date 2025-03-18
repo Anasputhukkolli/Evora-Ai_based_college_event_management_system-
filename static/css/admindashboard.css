@@ -1,0 +1,114 @@
+.admin-container {
+    display: flex;
+    height: 100vh;
+    margin-top: 120px;
+    border-top: 1px solid #f1f1f1;
+  }
+
+  .sidebar {
+    width: 280px;
+    color: white;
+    padding: 20px;
+    border-right: 1px solid #f1f1f1;
+
+  }
+
+  .sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .sidebar .nav-link {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+  }
+
+  .sidebar .nav-link:hover,
+  .sidebar .nav-link.active {
+    background: #311b1b;
+  }
+
+  .sidebar .nav-link i {
+    margin-right: 10px;
+  }
+
+  .content {
+    flex: 1;
+    padding: 20px;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .user-card,.event-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: 0.3s;
+    cursor: pointer;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .user-card:hover,.event-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+  }
+
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid white;
+    margin-bottom: 10px;
+  }
+
+  .role-dropdown {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .search-box {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .modal-content {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+  }
+
+  .role-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .role-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(255, 255, 255, 0.2);
+  }
