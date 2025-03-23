@@ -66,6 +66,9 @@
             <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="notifications">
                 <i class="fas fa-bell"></i> Notifications
             </a>
+            <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="poster_generation">
+                <i class="fas fa-bookmark"></i> Poster Maker
+            </a>
             <!-- <a href="#" class="nav-link" data-bs-toggle="tab" data-tab="settings">
                 <i class="fas fa-cog"></i> Settings
             </a> -->
@@ -708,6 +711,168 @@
                     </div>
                 </div>
             </div>
+        </section>
+        <section id="poster_generation" class="tab-content">
+            <div class="container py-4 d-flex flex-column h-100">
+                <div class="row mb-4">
+                    <div class="col text-center">
+                        <h1 style="color:#fff !important ;" class="mb-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
+                                class="bi bi-chat-square-text header-logo" viewBox="0 0 16 16">
+                                <path
+                                    d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                <path
+                                    d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
+                            </svg>
+                            Poster Generator
+                        </h1>
+                        <p style="color:#fff !important ;" class="text-muted">Describe your poster and I'll create it
+                            for you!</p>
+                    </div>
+                </div>
+
+                <div class="row flex-grow-1 mb-4">
+                    <div class="col">
+                        <div class="chat-container p-3 d-flex flex-column" id="chatMessages">
+                            <div class="message bot-message">
+                                <p class="mb-0">Hi there! I'm your poster generator assistant. Describe the poster you
+                                    want to create and I'll generate it for you.</p>
+                            </div>
+                            <!-- Messages will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form id="messageForm">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Describe your poster here..."
+                                    id="userInput">
+                                <button class="btn btn-primary" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-send" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- In your template file -->
+
+
+            <script>
+                // Add this JavaScript to connect your user interface with the backend
+                document.addEventListener('DOMContentLoaded', function () {
+                    const messageForm = document.getElementById('messageForm');
+                    const userInput = document.getElementById('userInput');
+                    const chatMessages = document.getElementById('chatMessages');
+
+                    messageForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        const userPrompt = userInput.value.trim();
+                        if (!userPrompt) return;
+
+                        // Add user message to chat
+                        addMessage('user', userPrompt);
+
+                        // Clear input
+                        userInput.value = '';
+
+                        // Add "thinking" message
+                        const thinkingId = addMessage('bot', 'Generating your poster...');
+
+                        try {
+                            // Call the API
+                            const response = await fetch('/api/generate-image/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    prompt: userPrompt
+                                })
+                            });
+
+                            const data = await response.json();
+
+                            // Remove thinking message
+                            const thinkingElement = document.getElementById(thinkingId);
+                            if (thinkingElement) {
+                                thinkingElement.remove();
+                            }
+
+                            // Check if generation was successful
+                            if (data.artifacts && data.artifacts[0] && data.artifacts[0].base64) {
+                                // Create container for image and download button
+                                const imageContainer = document.createElement('div');
+                                imageContainer.classList.add('image-container');
+
+                                // Create image element with reduced size
+                                const imgElement = document.createElement('img');
+                                imgElement.src = 'data:image/jpeg;base64,' + data.artifacts[0].base64;
+                                imgElement.classList.add('generated-poster');
+                                imgElement.style.maxWidth = '300px'; // Reduced image size
+                                imgElement.style.height = 'auto';
+
+                                // Create download button
+                                const downloadBtn = document.createElement('a');
+                                downloadBtn.classList.add('btn', 'btn-sm', 'btn-success', 'mt-2', 'download-btn', 'd-block');
+                                downloadBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download me-1" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg> Download Poster';
+                                downloadBtn.href = imgElement.src;
+                                downloadBtn.download = 'poster-' + Date.now() + '.jpg';
+
+                                // Add image and button to container
+                                imageContainer.appendChild(imgElement);
+                                imageContainer.appendChild(downloadBtn);
+
+                                // Add bot message with the image container
+                                addMessage('bot', 'Here\'s your generated poster:', imageContainer);
+                            } else {
+                                // Handle error or unexpected response
+                                addMessage('bot', 'Sorry, I couldn\'t generate a poster. Please try a different description.');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            addMessage('bot', 'Sorry, there was an error generating your poster. Please try again later.');
+                        }
+                    });
+
+                    // Function to add messages to the chat
+                    function addMessage(type, text, extraElement = null) {
+                        const messageId = 'msg-' + Date.now();
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message', type === 'user' ? 'user-message' : 'bot-message');
+                        messageDiv.id = messageId;
+
+                        const paragraph = document.createElement('p');
+                        paragraph.classList.add('mb-0');
+                        paragraph.textContent = text;
+                        messageDiv.appendChild(paragraph);
+
+                        if (extraElement) {
+                            messageDiv.appendChild(extraElement);
+                        }
+
+                        chatMessages.appendChild(messageDiv);
+
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        return messageId;
+                    }
+
+                    // Remove the old image form since we're integrating it with the chat
+                    const oldImageForm = document.getElementById('imageForm');
+                    if (oldImageForm) {
+                        oldImageForm.style.display = 'none';
+                    }
+                });
+            </script>
         </section>
         <section id="settings" class="tab-content">
             <h1>Settings</h1>

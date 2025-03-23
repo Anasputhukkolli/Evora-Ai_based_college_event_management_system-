@@ -137,3 +137,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GOOGLE_GEMINI_API_KEY = "AIzaSyAsZcm17d2sZjfGRbHCH57Hl7v8EZ0-Mcg"

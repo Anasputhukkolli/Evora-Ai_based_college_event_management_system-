@@ -47,4 +47,5 @@ urlpatterns = [
     path('book-volunteer/<int:club_id>/', book_volunteer, name='book_volunteer'),
     path('approve/<int:membership_id>/', approve_membership, name='approve_membership'),
     path('book/<int:event_id>/', book_event, name='book_event'),      
+
     ]

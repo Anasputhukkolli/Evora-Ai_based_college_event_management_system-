@@ -1065,7 +1065,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            {% if request.user.is_authenticated %}
                                             {% for event in bookedevent %}
 
 
@@ -1091,6 +1091,10 @@
                                                 </td>
                                             </tr>
                                             {% endfor %}
+                                            
+                                                
+                                            {% endif %}
+                                                
 
                                         </tbody>
                                     </table>
@@ -1136,26 +1140,24 @@
             </div>
         </section>
         </section>
-        <section id="chatbot" class="tab-content">
-            <div class="container py-4 d-flex flex-column h-100">
-                <!-- Header -->
+        <section id="chatbot" class="tab-content container mt-5">
+            <div class="container  d-flex flex-column h-100">
                 <div class="row mb-4">
                     <div class="col text-center">
                         <h2 style="color: #fff !important;" class="mb-0">
                             <i class="fas fa-robot me-2 text-primary"></i>
                             Event Management Assistant
                         </h2>
-                        <p style="color: #fff !important;" class="text-muted">How can I help you with your event management today?</p>
+                        
                     </div>
                 </div>
 
-                <!-- Chat Area -->
                 <div class="row flex-grow-1">
                     <div class="col-lg-8 mx-auto">
                         <div class="card h-100 border-0 shadow">
-                            <div class="chat-header d-flex align-items-center">
-                                <div class="bot-avatar">
-                                    <i class="fas fa-robot"></i>
+                            <div class="chat-header d-flex align-items-center p-3 border-bottom">
+                                <div class="bot-avatar me-3">
+                                    <i class="fas fa-robot fa-2x text-primary"></i>
                                 </div>
                                 <div>
                                     <h5 class="mb-0">EventBot</h5>
@@ -1163,44 +1165,26 @@
                                 </div>
                             </div>
 
-                            <div class="chat-container p-3" id="chatMessages">
+                            <div style="height: 50vh !important;" class="chat-container p-3" id="chatHistory"
+                                style="height: 300px; overflow-y: auto; background: #f8f9fa;">
                                 <div class="message bot-message">
-                                    <p class="mb-0">Hi there! I'm your Event Management Assistant. I can help you with:
+                                    <p class="mb-0">Hi there! I'm <b>Evora</b> your Event Management Assistant. I can help you with: settting
                                     </p>
                                     <ul class="mb-0 ps-3 mt-2">
-                                        <li>Creating and managing events</li>
-                                        <li>Managing guest lists and RSVPs</li>
+                                        <li>Explore Events</li>
+                                        <li>Booking Event</li>
                                         <li>Setting up ticketing and registration</li>
                                         <li>Finding venues and vendors</li>
                                         <li>Scheduling and timeline planning</li>
                                     </ul>
                                 </div>
-
-                                <div class="suggestion-chips">
-                                    <button class="suggestion-chip"
-                                        onclick="sendSuggestion('How do I create a new event?')">Create new
-                                        event</button>
-                                    <button class="suggestion-chip"
-                                        onclick="sendSuggestion('How do I manage RSVPs?')">Manage RSVPs</button>
-                                    <button class="suggestion-chip"
-                                        onclick="sendSuggestion('How do I set up ticketing?')">Set up ticketing</button>
-                                    <button class="suggestion-chip"
-                                        onclick="sendSuggestion('How do I generate reports?')">Generate reports</button>
-                                </div>
-
-                                <!-- Typing indicator -->
-                                <div class="typing-indicator" id="typingIndicator">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
                             </div>
 
-                            <div class="chat-footer">
-                                <form id="messageForm">
+                            <div class="chat-footer p-3 border-top">
+                                <form id="messageForm" onsubmit="event.preventDefault(); chat();">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Type your question here..."
-                                            id="userInput">
+                                        <input style="background: none !important;border: 1px solid #000;border-top-left-radius: 8px !important;color:#000 !important; " type="text" class="form-control" placeholder="Type your question here..."
+                                            id="chatMessage">
                                         <button class="btn btn-primary" type="submit">
                                             <i class="fas fa-paper-plane"></i>
                                         </button>
@@ -1210,16 +1194,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Quick Action Button -->
-                <div class="quick-actions">
-                    <button class="quick-action-btn" data-bs-toggle="tooltip" data-bs-placement="left"
-                        title="Quick Help">
-                        <i class="fas fa-bolt"></i>
-                    </button>
-                </div>
             </div>
         </section>
+
         <section id="logout" class="tab-content">
             <h1>Logout</h1>
             <p>Click below to log out.</p>
@@ -1228,245 +1205,355 @@
     </main>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    const responses = {
+                "hello": "Hai! I'm Evora. How do you do, man?",
+                "name":"Hai! I'm Evora. How do you do, man?",
+                "hi": "Hai! I'm Evora. How do you do, man?",
+                "how are you": "I'm just a chatbot, but I'm here to help! How can I assist you?",
+                "create event": "To create a new event, go to your dashboard and click 'Create Event'.",
+                "manage rsvps": "To manage RSVPs, visit the 'Guests' tab in your event dashboard.",
+                "set up ticketing": "To set up tickets, navigate to the   side bar--> events-->book event section and configure pricing and availability.",
+                "generate reports": "To generate reports, go to 'Reports' in the dashboard and select your desired filters.",
+                "help": "I can assist you with event creation, RSVP management, ticketing, and generating reports.",
+                "explore_event": "GO to  side bar--> events-->explore event ",
+                "book_event": "GO to  side bar--> events-->book event ",
+                "tickets": "GO to  side bar--> events-->book event ",
+                "volunteer": "GO to  side bar--> club&society-->all Clubs ",
+                "how to become a volunteer": "To become a volunteer, go to sidebar → Club & Society → Volunteer Sign-up.",
+                "volunteer opportunities": "You can find volunteer opportunities in the 'Events' or 'Club & Society' section.",
+                "apply for volunteering": "Visit 'Volunteer Sign-up' under Club & Society and submit your application.",
+                "benefits of volunteering": "Volunteering helps you build skills, network, and gain event experience.",
+                "volunteer responsibilities": "Volunteers help with event management, guest assistance, and logistics.",
+                "upcoming volunteer events": "Check the 'Upcoming Events' section in your dashboard to find events needing volunteers.",
+                "my clubs": "To find your clubs, go to Sidebar → Club & Society → My Clubs and scroll down.",
+                // Greetings & General Responses
+                "hello": "Hello! I'm Evora, your event assistant. How can I help you today?",
+                "hi": "Hey there! Need any help with event management?",
+                "how are you": "I'm just a chatbot, but I'm here to assist you! What do you need help with?",
+                "thank you": "You're welcome! Let me know if you need more help.",
+                "bye": "Goodbye! Have a great day managing your events!",
+                "who are you": "I'm Evora, your Event Management Assistant, here to help you with events, clubs, and more!",
+
+                // Event Management Queries
+                "create event": "To create a new event, go to *Dashboard → Create Event* and follow the steps.",
+                "manage rsvps": "To manage RSVPs, visit *Dashboard → Guests* and check attendee details.",
+                "set up ticketing": "You can set up tickets under *Events → Book Event*, where you can manage pricing and availability.",
+                "generate reports": "To generate reports, go to *Dashboard → Reports* and choose filters as per your needs.",
+                "edit event": "To edit an event, go to *Dashboard → My Events*, select the event, and click 'Edit'.",
+                "delete event": "To delete an event, go to *Dashboard → My Events*, select the event, and click 'Delete'.",
+                "view event details": "Find event details in *Sidebar → Events → Explore Events*.",
+
+                // Exploring and Booking Events
+                "explore event": "To explore events, navigate to *Sidebar → Events → Explore Events*.",
+                "book event": "To book an event, visit *Sidebar → Events → Book Event*.",
+                "event schedule": "Check the event schedule in *Sidebar → Events → Schedule*.",
+                "event location": "You can find event locations under *Event Details → Venue Information*.",
+                "cancel booking": "To cancel a booking, go to *Dashboard → My Bookings → Cancel*.",
+                "refund policy": "Check the refund policy under *Sidebar → Payments → Refunds*.",
+
+                // Volunteering Information
+                "volunteer": "To volunteer, go to *Sidebar → Club & Society → All Clubs*.",
+                "how to become a volunteer": "Sign up for volunteering in *Sidebar → Club & Society → Volunteer Sign-up*.",
+                "volunteer opportunities": "Check *Events → Volunteer Opportunities* for available roles.",
+                "apply for volunteering": "Submit your application under *Club & Society → Volunteer Sign-up*.",
+                "benefits of volunteering": "Volunteering helps you build skills, expand your network, and gain experience.",
+                "volunteer responsibilities": "As a volunteer, you may help with event logistics, guest assistance, and setup.",
+                "upcoming volunteer events": "Check *Dashboard → Upcoming Events* for volunteering opportunities.",
+
+                // Clubs & Societies
+                "where can I find my clubs": "You can find your clubs under *Sidebar → Club & Society → My Clubs*.",
+                "how to access my clubs": "Navigate to *Sidebar → Club & Society → My Clubs*.",
+                "show me my clubs": "Sure! Visit *Sidebar → Club & Society → My Clubs*.",
+                "where is my clubs section": "Go to *Sidebar → Club & Society → My Clubs*.",
+                "how do I check my clubs": "Your clubs are listed in *Sidebar → Club & Society → My Clubs*.",
+
+                // Registration & Attendance
+                "event registration": "To register for an event, visit *Events → Book Event* and complete the form.",
+                "cancel registration": "To cancel your event registration, go to *Dashboard → My Events → Cancel Registration*.",
+                "how to check attendance": "You can view attendee details in *Dashboard → Attendance*.",
+                "mark attendance": "Go to *Dashboard → Attendance → Mark Attendance*.",
+
+                // Payment & Reports
+                "payment options": "You can manage payments in *Sidebar → Payments*.",
+                "request refund": "To request a refund, go to *Payments → Refunds → Request Refund*.",
+                "check payment history": "View your payment history under *Dashboard → Payments*.",
+
+                // Notifications & Alerts
+                "check notifications": "View all alerts in *Sidebar → Notifications*.",
+                "event reminders": "Your upcoming events and reminders are listed under *Dashboard → Notifications*.",
+                "set event reminders": "You can enable event reminders in *Settings → Notifications*.",
+
+                // Speaker & Guest Management
+                "add speaker": "To add a speaker, go to *Dashboard → Speaker Management → Add Speaker*.",
+                "view speakers": "See the list of event speakers in *Event Details → Speakers*.",
+                "invite speaker": "Send speaker invitations via *Speaker Management → Invite Speaker*.",
+                "edit speaker details": "Modify speaker details in *Dashboard → Speaker Management → Edit Speaker*.",
+
+                // Venue Booking
+                "book venue": "To book a venue, go to *Dashboard → Venue Booking → Select Venue*.",
+                "venue availability": "Check available venues under *Dashboard → Venue Booking*.",
+                "cancel venue booking": "To cancel a venue booking, go to *Dashboard → Venue Booking → Cancel Booking*.",
+
+                // Feedback & Reviews
+                "submit feedback": "You can submit feedback in *Dashboard → Feedback & Reviews*.",
+                "view feedback": "Check feedback under *Dashboard → Reports → Event Feedback*.",
+                "rate an event": "To rate an event, go to *My Events → Event Rating*.",
+
+                // Technical Support
+                "technical issues": "If you are facing issues, visit *Help Center → Technical Support*.",
+                "report a bug": "Report a bug by going to *Settings → Report Issue*.",
+                "contact support": "For assistance, contact support via *Help Center → Contact Us*.",
+
+                // Miscellaneous
+                "how does the event system work": "Our system lets you *create, explore, book, and manage events*. You can also volunteer, book venues, and track attendance.",
+                "what are the benefits of using this platform": "Our platform offers *easy event management, ticketing, reports, notifications, and more!*",
+                "where can I find event analytics": "Check event analytics in *Dashboard → Reports → Analytics*.",
+                "how do I manage event invitations": "Manage invitations in *Dashboard → Invitations*.",
+
+                "reports":"Go to Dashboard → Reports",
+                "result":"Go to Dashboard → Reports",
+                "table":"Go to Dashboard → Reports",
+    };
+    
+    async function chat() {
+        let messageInput = document.getElementById("chatMessage");
+        let message = messageInput.value.trim().toLowerCase(); // Convert input to lowercase for matching
+    
+        if (!message) {
+            alert("Please enter a message!");
+            return;
+        }
+    
+        let chatHistory = document.getElementById("chatHistory");
+    
+        // Display user message
+        chatHistory.innerHTML += `
+            <div class='d-flex justify-content-end mb-2'>
+                <div class='p-3 bg-primary text-white rounded w-30'>${message}</div>
+            </div>`;
+    
+        messageInput.value = "";
+    
+        // Show typing effect
+        let typingIndicator = document.createElement("div");
+        typingIndicator.innerHTML = `
+            <div class='d-flex justify-content-start mb-2' id="typing">
+                <div class='p-3 bg-secondary text-white rounded w-50'>Typing...</div>
+            </div>`;
+        chatHistory.appendChild(typingIndicator);
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    
+        // Check for predefined response (including partial matches)
+        let foundResponse = null;
+        for (let key in responses) {
+            if (message.includes(key)) {
+                foundResponse = responses[key];
+                break;
+            }
+        }
+    
+        if (foundResponse) {
+            setTimeout(() => {
+                document.getElementById("typing").remove(); // Remove typing indicator
+                chatHistory.innerHTML += `
+                    <div class='d-flex justify-content-start mb-2'>
+                        <div class='p-3 bg-secondary text-white rounded w-50'>${foundResponse}</div>
+                    </div>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }, 1000); // Simulate delay for a real chatbot
+        } else {
+            // Fetch AI-generated response if no predefined response is found
+            try {
+                let response = await fetch("/api/chatbot/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+    
+                let data = await response.json();
+                document.getElementById("typing").remove(); // Remove typing indicator
+    
+                chatHistory.innerHTML += `
+                    <div class='d-flex justify-content-start mb-2'>
+                        <div class='p-3 bg-secondary text-white rounded w-50'>${data.reply}</div>
+                    </div>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            } catch (error) {
+                document.getElementById("typing").remove();
+                chatHistory.innerHTML += `
+                    <div class='d-flex justify-content-start mb-2'>
+                        <div class='p-3 bg-danger text-white rounded w-50'>Sorry, something went wrong. Please try again.</div>
+                    </div>`;
+            }
+        }
+    }
+    
+</script>
+
+<!-- <script>
+
+   
+    document.addEventListener('DOMContentLoaded', function () {
         const chatMessages = document.getElementById('chatMessages');
         const messageForm = document.getElementById('messageForm');
         const userInput = document.getElementById('userInput');
         const typingIndicator = document.getElementById('typingIndicator');
-        
-        // Initialize tooltips
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Common help responses
-        const helpResponses = {
-            'create new event': {
-                title: 'Creating a New Event',
-                content: `
-                    <p>To create a new event, follow these steps:</p>
-                    <ol>
-                        <li>Navigate to the Dashboard and click "Create Event" button</li>
-                        <li>Fill in the event details form with name, date, time, and location</li>
-                        <li>Add a description and upload an event banner image</li>
-                        <li>Set your event privacy (public or private)</li>
-                        <li>Click "Save & Continue" to move to the next steps</li>
-                    </ol>
-                    <img src="/api/placeholder/400/320" alt="Create event form">
-                    <p>After creating the event, you'll be able to manage tickets, guest lists, and more from the event dashboard.</p>
-                `
-            },
-            'manage rsvps': {
-                title: 'Managing RSVPs',
-                content: `
-                    <p>To manage your event RSVPs:</p>
-                    <ol>
-                        <li>Go to your event dashboard</li>
-                        <li>Click on the "Guests" or "RSVPs" tab</li>
-                        <li>Here you can view all respondents and their status</li>
-                        <li>Use filters to sort by response type (Yes, No, Maybe)</li>
-                        <li>Export the guest list as CSV or send group messages</li>
-                    </ol>
-                    <p>You can also set automatic reminders for guests who haven't responded yet.</p>
-                `
-            },
-            'set up ticketing': {
-                title: 'Setting Up Event Tickets',
-                content: `
-                    <p>To set up tickets for your event:</p>
-                    <ol>
-                        <li>Go to your event dashboard</li>
-                        <li>Select the "Tickets" tab</li>
-                        <li>Click "Add Ticket Type"</li>
-                        <li>Configure details like name, price, quantity, and sale period</li>
-                        <li>Set up any special discounts or promo codes</li>
-                        <li>Click "Save" to publish your tickets</li>
-                    </ol>
-                    <p>You can create multiple ticket types for different audience segments or pricing tiers.</p>
-                `
-            },
-            'generate reports': {
-                title: 'Generating Event Reports',
-                content: `
-                    <p>To generate reports for your events:</p>
-                    <ol>
-                        <li>Navigate to your event dashboard</li>
-                        <li>Click on the "Reports" or "Analytics" tab</li>
-                        <li>Select the type of report you need (attendance, sales, etc.)</li>
-                        <li>Choose your date range and any specific filters</li>
-                        <li>Click "Generate Report"</li>
-                        <li>Download as PDF, CSV, or Excel format</li>
-                    </ol>
-                    <p>Reports can help you analyze ticket sales, attendance patterns, revenue, and more.</p>
-                `
-            }
-        };
-        
-        // Handle form submission
-        messageForm.addEventListener('submit', function(e) {
+
+        messageForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
-            const message = userInput.value.trim();
+
+            const message = userInput.value.trim().toLowerCase();
             if (message === '') return;
-            
-            // Add user message
+
             addMessage(message, 'user');
-            
-            // Clear input
             userInput.value = '';
-            
-            // Show typing indicator
             typingIndicator.style.display = 'block';
-            
-            // Simulate bot response
+
             setTimeout(() => {
                 typingIndicator.style.display = 'none';
                 processBotResponse(message);
-            }, 1500);
+            }, 1000);
         });
-        
-        // Function to handle suggestion chip clicks
-        window.sendSuggestion = function(suggestion) {
-            addMessage(suggestion, 'user');
-            
-            // Show typing indicator
-            typingIndicator.style.display = 'block';
-            
-            // Simulate bot response
-            setTimeout(() => {
-                typingIndicator.style.display = 'none';
-                processBotResponse(suggestion);
-            }, 1500);
-        };
-        
+
         function addMessage(content, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}-message`;
-            
-            if (sender === 'user') {
-                const messagePara = document.createElement('p');
-                messagePara.className = 'mb-0';
-                messagePara.textContent = content;
-                messageDiv.appendChild(messagePara);
-            }
-            
+            messageDiv.innerHTML = `<p class='mb-0'>${content}</p>`;
             chatMessages.appendChild(messageDiv);
-            
-            // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            return messageDiv;
         }
-        
-        function processBotResponse(userMessage) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message bot-message';
-            
-            // Check for known help topics
-            let matched = false;
-            for (const [keyword, response] of Object.entries(helpResponses)) {
-                if (userMessage.toLowerCase().includes(keyword)) {
-                    matched = true;
-                    
-                    // Create help article response
-                    const articleDiv = document.createElement('div');
-                    articleDiv.className = 'help-article';
-                    
-                    const title = document.createElement('h5');
-                    title.textContent = response.title;
-                    articleDiv.appendChild(title);
-                    
-                    articleDiv.insertAdjacentHTML('beforeend', response.content);
-                    
-                    // Add rating buttons
-                    const ratingDiv = document.createElement('div');
-                    ratingDiv.className = 'mt-3';
-                    ratingDiv.innerHTML = `
-                        <p class="mb-2 text-muted small">Was this helpful?</p>
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-outline-success">
-                                <i class="fas fa-thumbs-up me-1"></i> Yes
-                            </button>
-                            <button class="btn btn-outline-danger">
-                                <i class="fas fa-thumbs-down me-1"></i> No
-                            </button>
-                        </div>
-                    `;
-                    
-                    articleDiv.appendChild(ratingDiv);
-                    messageDiv.appendChild(articleDiv);
-                    break;
+
+        function processBotResponse(message) {
+            let response = "Sorry, I didn't understand that.";
+
+            // Responses
+            const responses = {
+                "hello": "Hai! I'm Evora. How do you do, man?",
+                "hi": "Hai! I'm Evora. How do you do, man?",
+                "how are you": "I'm just a chatbot, but I'm here to help! How can I assist you?",
+                "create event": "To create a new event, go to your dashboard and click 'Create Event'.",
+                "manage rsvps": "To manage RSVPs, visit the 'Guests' tab in your event dashboard.",
+                "set up ticketing": "To set up tickets, navigate to the   side bar eventsbook event section and configure pricing and availability.",
+                "generate reports": "To generate reports, go to 'Reports' in the dashboard and select your desired filters.",
+                "help": "I can assist you with event creation, RSVP management, ticketing, and generating reports.",
+                "explore_event": "GO to  side bar eventsexplore event ",
+                "book_event": "GO to  side bar eventsbook event ",
+                "tickets": "GO to  side bar eventsbook event ",
+                "volunteer": "GO to  side bar club&societyall Clubs ",
+                "how to become a volunteer": "To become a volunteer, go to sidebar → Club & Society → Volunteer Sign-up.",
+                "volunteer opportunities": "You can find volunteer opportunities in the 'Events' or 'Club & Society' section.",
+                "apply for volunteering": "Visit 'Volunteer Sign-up' under Club & Society and submit your application.",
+                "benefits of volunteering": "Volunteering helps you build skills, network, and gain event experience.",
+                "volunteer responsibilities": "Volunteers help with event management, guest assistance, and logistics.",
+                "upcoming volunteer events": "Check the 'Upcoming Events' section in your dashboard to find events needing volunteers.",
+                "my clubs": "To find your clubs, go to Sidebar → Club & Society → My Clubs and scroll down.",
+                // Greetings & General Responses
+                "hello": "Hello! I'm Evora, your event assistant. How can I help you today?",
+                "hi": "Hey there! Need any help with event management?",
+                "how are you": "I'm just a chatbot, but I'm here to assist you! What do you need help with?",
+                "thank you": "You're welcome! Let me know if you need more help.",
+                "bye": "Goodbye! Have a great day managing your events!",
+                "who are you": "I'm Evora, your Event Management Assistant, here to help you with events, clubs, and more!",
+
+                // Event Management Queries
+                "create event": "To create a new event, go to **Dashboard → Create Event** and follow the steps.",
+                "manage rsvps": "To manage RSVPs, visit **Dashboard → Guests** and check attendee details.",
+                "set up ticketing": "You can set up tickets under **Events → Book Event**, where you can manage pricing and availability.",
+                "generate reports": "To generate reports, go to **Dashboard → Reports** and choose filters as per your needs.",
+                "edit event": "To edit an event, go to **Dashboard → My Events**, select the event, and click 'Edit'.",
+                "delete event": "To delete an event, go to **Dashboard → My Events**, select the event, and click 'Delete'.",
+                "view event details": "Find event details in **Sidebar → Events → Explore Events**.",
+
+                // Exploring and Booking Events
+                "explore event": "To explore events, navigate to **Sidebar → Events → Explore Events**.",
+                "book event": "To book an event, visit **Sidebar → Events → Book Event**.",
+                "event schedule": "Check the event schedule in **Sidebar → Events → Schedule**.",
+                "event location": "You can find event locations under **Event Details → Venue Information**.",
+                "cancel booking": "To cancel a booking, go to **Dashboard → My Bookings → Cancel**.",
+                "refund policy": "Check the refund policy under **Sidebar → Payments → Refunds**.",
+
+                // Volunteering Information
+                "volunteer": "To volunteer, go to **Sidebar → Club & Society → All Clubs**.",
+                "how to become a volunteer": "Sign up for volunteering in **Sidebar → Club & Society → Volunteer Sign-up**.",
+                "volunteer opportunities": "Check **Events → Volunteer Opportunities** for available roles.",
+                "apply for volunteering": "Submit your application under **Club & Society → Volunteer Sign-up**.",
+                "benefits of volunteering": "Volunteering helps you build skills, expand your network, and gain experience.",
+                "volunteer responsibilities": "As a volunteer, you may help with event logistics, guest assistance, and setup.",
+                "upcoming volunteer events": "Check **Dashboard → Upcoming Events** for volunteering opportunities.",
+
+                // Clubs & Societies
+                "where can I find my clubs": "You can find your clubs under **Sidebar → Club & Society → My Clubs**.",
+                "how to access my clubs": "Navigate to **Sidebar → Club & Society → My Clubs**.",
+                "show me my clubs": "Sure! Visit **Sidebar → Club & Society → My Clubs**.",
+                "where is my clubs section": "Go to **Sidebar → Club & Society → My Clubs**.",
+                "how do I check my clubs": "Your clubs are listed in **Sidebar → Club & Society → My Clubs**.",
+
+                // Registration & Attendance
+                "event registration": "To register for an event, visit **Events → Book Event** and complete the form.",
+                "cancel registration": "To cancel your event registration, go to **Dashboard → My Events → Cancel Registration**.",
+                "how to check attendance": "You can view attendee details in **Dashboard → Attendance**.",
+                "mark attendance": "Go to **Dashboard → Attendance → Mark Attendance**.",
+
+                // Payment & Reports
+                "payment options": "You can manage payments in **Sidebar → Payments**.",
+                "request refund": "To request a refund, go to **Payments → Refunds → Request Refund**.",
+                "check payment history": "View your payment history under **Dashboard → Payments**.",
+
+                // Notifications & Alerts
+                "check notifications": "View all alerts in **Sidebar → Notifications**.",
+                "event reminders": "Your upcoming events and reminders are listed under **Dashboard → Notifications**.",
+                "set event reminders": "You can enable event reminders in **Settings → Notifications**.",
+
+                // Speaker & Guest Management
+                "add speaker": "To add a speaker, go to **Dashboard → Speaker Management → Add Speaker**.",
+                "view speakers": "See the list of event speakers in **Event Details → Speakers**.",
+                "invite speaker": "Send speaker invitations via **Speaker Management → Invite Speaker**.",
+                "edit speaker details": "Modify speaker details in **Dashboard → Speaker Management → Edit Speaker**.",
+
+                // Venue Booking
+                "book venue": "To book a venue, go to **Dashboard → Venue Booking → Select Venue**.",
+                "venue availability": "Check available venues under **Dashboard → Venue Booking**.",
+                "cancel venue booking": "To cancel a venue booking, go to **Dashboard → Venue Booking → Cancel Booking**.",
+
+                // Feedback & Reviews
+                "submit feedback": "You can submit feedback in **Dashboard → Feedback & Reviews**.",
+                "view feedback": "Check feedback under **Dashboard → Reports → Event Feedback**.",
+                "rate an event": "To rate an event, go to **My Events → Event Rating**.",
+
+                // Technical Support
+                "technical issues": "If you are facing issues, visit **Help Center → Technical Support**.",
+                "report a bug": "Report a bug by going to **Settings → Report Issue**.",
+                "contact support": "For assistance, contact support via **Help Center → Contact Us**.",
+
+                // Miscellaneous
+                "how does the event system work": "Our system lets you **create, explore, book, and manage events**. You can also volunteer, book venues, and track attendance.",
+                "what are the benefits of using this platform": "Our platform offers **easy event management, ticketing, reports, notifications, and more!**",
+                "where can I find event analytics": "Check event analytics in **Dashboard → Reports → Analytics**.",
+                "how do I manage event invitations": "Manage invitations in **Dashboard → Invitations**.",
+
+                "reports": "Go to Dashboard → Reports",
+                "result": "Go to Dashboard → Reports",
+                "table": "Go to Dashboard → Reports",
+
+            };
+
+            // Check if message matches any response key
+            Object.keys(responses).forEach(key => {
+                if (message.includes(key)) {
+                    response = responses[key];
                 }
-            }
-            
-            // Generic response if no match found
-            if (!matched) {
-                const messagePara = document.createElement('p');
-                messagePara.className = 'mb-0';
-                messagePara.textContent = "I can help you with that! Here's what you need to know about " + 
-                                          userMessage.toLowerCase().replace('how do i', '').replace('?', '') + ":";
-                
-                const listEl = document.createElement('ul');
-                listEl.className = 'ps-3 mt-2 mb-0';
-                
-                const suggestions = [
-                    "Check the Events section in your dashboard",
-                    "Our documentation has a detailed guide on this topic",
-                    "You might need admin permissions for this action",
-                    "Try using the search feature with specific keywords"
-                ];
-                
-                suggestions.forEach(suggestion => {
-                    const li = document.createElement('li');
-                    li.textContent = suggestion;
-                    listEl.appendChild(li);
-                });
-                
-                messageDiv.appendChild(messagePara);
-                messageDiv.appendChild(listEl);
-                
-                // Add "contact support" option
-                const contactDiv = document.createElement('div');
-                contactDiv.className = 'mt-3';
-                contactDiv.innerHTML = `
-                    <button class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-headset me-1"></i> Contact Live Support
-                    </button>
-                `;
-                
-                messageDiv.appendChild(contactDiv);
-            }
-            
-            chatMessages.appendChild(messageDiv);
-            
-            // Add new suggestion chips after response
-            const suggestionsDiv = document.createElement('div');
-            suggestionsDiv.className = 'suggestion-chips';
-            
-            const newSuggestions = [
-                "How do I customize event pages?",
-                "Can I send email invitations?",
-                "How to track attendance?",
-                "Setting up payment methods"
-            ];
-            
-            newSuggestions.forEach(suggestion => {
-                const chip = document.createElement('button');
-                chip.className = 'suggestion-chip';
-                chip.textContent = suggestion;
-                chip.onclick = function() {
-                    sendSuggestion(suggestion);
-                };
-                suggestionsDiv.appendChild(chip);
             });
-            
-            chatMessages.appendChild(suggestionsDiv);
-            
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            addMessage(response, 'bot');
         }
+
+        // Handle suggestion chip clicks
+        window.sendSuggestion = function (text) {
+            userInput.value = text;
+            messageForm.dispatchEvent(new Event('submit'));
+        };
     });
-</script>
+
+</script> -->
 
 {% endblock %}

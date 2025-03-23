@@ -7298,3 +7298,80 @@ h5 {
   border-radius: 8px;
   margin: 10px 0;
 } 
+
+/* Add this CSS to your stylesheet for better styling */
+.chat-container {
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: #2b5278;
+  color: white;
+  margin-left: auto;
+}
+
+.bot-message {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.generated-poster {
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #28a745;
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+  background-color: #218838;
+  color: white;
+}
+
+#userInput {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#userInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary {
+  background-color: #2b5278;
+  border-color: #2b5278;
+}
+
+.btn-primary:hover {
+  background-color: #1a3a5f;
+  border-color: #1a3a5f;
+}

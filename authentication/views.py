@@ -416,6 +416,8 @@ def student_dashboard(request):
     })
 
 
+
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -445,6 +447,8 @@ def teacher_dashboard(request):
 @login_required
 def event_head_dashboard(request):
     user_profile = UserProfile.objects.get(user=request.user)
+    categories = EventPhoto.EVENT_CATEGORIES  # Get categories from model
+
     if user_profile.role != 'event_head':
         messages.error(request, "Unauthorized access!")
         return redirect('home')  # Redirect unauthorized users
@@ -477,6 +481,7 @@ def event_head_dashboard(request):
         "clubs":club,
         "bookedclub":bookedclub,
         "aprrove":aprrove,
+        "categories":categories,
     })
 @login_required
 def outsider_dashboard(request):
