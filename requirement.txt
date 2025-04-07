@@ -1,0 +1,10 @@
+Django==4.2.5
+djangorestframework==3.14.0
+django-cors-headers==4.3.0
+Pillow==10.0.0                 # For image and poster handling
+django-environ==0.10.0         # For environment variable handling
+requests==2.31.0               # For making API calls (chatbot, notifications)
+groq==1.12.0                 # For AI chatbot integration (optional)
+envdia==21.2.0               # For poster deployment
+whitenoise==6.6.0              # For serving static files
+psycopg2-binary==2.9.7         # PostgreSQL DB driver (change if you're using MySQL)
